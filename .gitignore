@@ -2,3 +2,4 @@
 *.exe
 **/.vscode
 src
+sdl2-config
