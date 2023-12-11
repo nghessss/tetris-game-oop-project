@@ -5,7 +5,7 @@
 
 
 class GameState {
-    bool currentGameState[rows+1][cols+1];
+    SDL_Texture *currentGameState[rows+1][cols+1];
     static int timeStart;
     static int currentTime;
 public:

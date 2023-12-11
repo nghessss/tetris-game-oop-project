@@ -27,6 +27,10 @@ Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fu
     } else {
         isRunning = false;
     }
+
+    if (TTF_Init() == -1) {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+    }
     
     
 }
@@ -58,6 +62,7 @@ void Game::Renderer() {
     // This is where we would add stuff to render
     gameState->drawGameBorder();
     gameState->drawGameState();
+    gameState->drawTime();  
     SDL_RenderPresent(renderer);
 }
 void Game::Clean() {
@@ -65,6 +70,7 @@ void Game::Clean() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
+    TTF_Quit();
     cout << "Game Cleaned" << endl;
 }
 bool Game::Running() {

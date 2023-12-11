@@ -9,11 +9,12 @@
 #define blockHeight 32
 #include <iostream>
 #include <string>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
+
 #include <vector>
 #include "gameState.h"
-
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include "SDL2/SDL_image.h"
 using namespace std;
 
 class GameState;  // Forward declaration
@@ -25,8 +26,7 @@ public:
     static bool isRunning;
     static SDL_Renderer* renderer;
     static SDL_Event event;
-    static int timeStart;
-    static int currentTime;
+    
     
     Game(const char* title = "", int xPos = 0, int yPos = 0, int width = 0, int height = 0, bool fullscreen = false);
     ~Game();
