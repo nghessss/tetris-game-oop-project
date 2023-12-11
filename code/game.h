@@ -1,12 +1,12 @@
 #pragma once
 #ifndef GAME_H
 #define GAME_H
-#define screen_high 800
+#define screen_height 800
 #define screen_width 600
-#define cols  24
-#define rows  32
-#define blockWidth  (screen_width / cols)
-#define blockHeight (screen_high / rows)
+#define cols  10
+#define rows  20
+#define blockWidth  32
+#define blockHeight 32
 #include <iostream>
 #include <string>
 #include "SDL2/SDL.h"
@@ -25,6 +25,9 @@ public:
     static bool isRunning;
     static SDL_Renderer* renderer;
     static SDL_Event event;
+    static int timeStart;
+    static int currentTime;
+    
     Game(const char* title = "", int xPos = 0, int yPos = 0, int width = 0, int height = 0, bool fullscreen = false);
     ~Game();
     GameState* gameState;

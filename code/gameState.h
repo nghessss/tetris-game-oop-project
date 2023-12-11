@@ -5,11 +5,14 @@
 
 
 class GameState {
-    bool currentGameState[rows][cols];
-
+    bool currentGameState[rows+1][cols+1];
+    static int timeStart;
+    static int currentTime;
 public:
     GameState();
     void drawGameState();
+    void drawGameBorder();
+    void drawTime();
 };
 
 #endif

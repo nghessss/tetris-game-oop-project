@@ -46,13 +46,17 @@ void Game::HandleEvent() {
 
     }
 }
-void Game::Update() {
-    int cnt = 0;
+void updateTime() {
     
+}
+void Game::Update() {
+    updateTime();
+       
 }
 void Game::Renderer() {
     SDL_RenderClear(renderer);
     // This is where we would add stuff to render
+    gameState->drawGameBorder();
     gameState->drawGameState();
     SDL_RenderPresent(renderer);
 }
