@@ -6,6 +6,15 @@ GameState::GameState()
     for (int i = 0; i <= rows; ++i)
         for (int j = 0; j <= cols; j++)
             currentGameState[i][j] = NULL;
+    blockList.push_back(new Block_I());
+    blockList.push_back(new Block_O());
+    blockList.push_back(new Block_T());
+    blockList.push_back(new Block_L());
+    blockList.push_back(new Block_Z());
+    blockList.push_back(new Block_S());
+    blockList.push_back(new Block_J());
+    currentBlock = blockList[rand() % 7];
+    speed = 1;
 }
 SDL_Texture *loadImage(const char *filename)
 {
@@ -98,17 +107,68 @@ void GameState::drawTime()
     SDL_FreeSurface(surface);
     // free font
     TTF_CloseFont(font);
- 
 }
-void GameState::drawBlock(){
-    int random = rand() % 7;
-    Block* block = new Block_L();
-    for(int j = 0; j < 3; j++){
-        for(int k = 0; k < 3; k++){
-            if(block->getShape()[block->getNumRotation()+2][j][k] == 1 && currentGameState[j][k] == 0){
-                SDL_Rect rect = {(block->getTopLeft().getX() + k) * blockWidth, (block->getTopLeft().getY() + j) * blockHeight, blockWidth, blockHeight };
-                SDL_RenderCopy(Game::renderer, block->getImg(), nullptr, &rect);
+bool GameState::checkCollapse(Block *block)
+{
+    if (block->getTopLeft().getX() + 2 == cols || block->getTopLeft().getY() + 2 == rows)
+        return true;
+    Point point = block->getTopLeft();
+    for (int col = 1; col <= cols; col++)
+    {
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+            {
+                if (block->getShape()[block->getNumRotation()][i][j] == 1 && currentGameState[point.getY() + i][point.getX() + j] != NULL)
+                    return true;
+            }
+    }
+    return false;
+}
+Point GameState::getCollapsablePoint()
+{
+}
+void GameState::updateBlock()
+{
+    if (SDL_GetTicks() - Block::timePos >= 1000 / speed)
+    {
+        Block::timePos = SDL_GetTicks();
+        if (checkCollapse(currentBlock) == 0)
+            currentBlock->moveDown();
+        else
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1)
+                    {
+                        currentGameState[currentBlock->getTopLeft().getY() + j][currentBlock->getTopLeft().getX() + k] = currentBlock->getImg();
+                    }
+                }
+            }
+            currentBlock = blockList[rand() % 7];
+        }
+    }
+}
+void GameState::drawBlock()
+{
+
+    for (int j = 0; j < 3; j++)
+    {
+        for (int k = 0; k < 3; k++)
+        {
+            if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1 && currentGameState[j][k] == NULL)
+            {
+                SDL_Rect rect = {(currentBlock->getTopLeft().getX() + k) * blockWidth, (currentBlock->getTopLeft().getY() + j) * blockHeight, blockWidth, blockHeight};
+                SDL_RenderCopy(Game::renderer, currentBlock->getImg(), nullptr, &rect);
             }
         }
+    }
+}
+GameState::~GameState()
+{
+    for (int i = 0; i < blockList.size(); i++)
+    {
+        delete blockList[i];
     }
 }

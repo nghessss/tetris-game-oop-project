@@ -20,13 +20,14 @@ protected:
     vector<vector<vector<int>>> Shape;
     SDL_Texture* img;
     Point TopLeft;
-    int num_rotation;
     float speed;
+    int num_rotation;
+    int n;
     //vector<Point> pointLists; 
 public:
     Block();
     ~Block();
-
+    static int timePos;
     vector<vector<vector<int>>> getShape();
     SDL_Texture* getImg();
     Point getTopLeft();

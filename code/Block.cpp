@@ -15,6 +15,7 @@ void Point::setX(int x){
 void Point::setY(int y){
     this->y = y;
 }
+int Block::timePos = SDL_GetTicks();
 Block::Block(){
     Shape.resize(4);
     for(int i = 0; i < 4; i++){
