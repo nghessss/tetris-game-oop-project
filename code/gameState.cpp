@@ -49,6 +49,14 @@ SDL_Texture *loadImage(const char *filename)
 void GameState::drawGameBorder()
 {
     SDL_Texture *borderBlock = loadImage("image/border.png");
+    SDL_Texture *backgroundBlock = loadImage("image/background.png");
+    for (int i = 0; i <= cols + 1; ++i)
+    {
+        SDL_Rect rect1 = {i * blockWidth, 0, blockWidth, blockHeight};
+        SDL_Rect rect2 = {i * blockWidth, (rows + 1) * blockHeight, blockWidth, blockHeight};
+        SDL_RenderCopy(Game::renderer, backgroundBlock, nullptr, &rect1);
+        SDL_RenderCopy(Game::renderer, borderBlock, nullptr, &rect2);
+    }
     for (int i = 0; i <= rows + 1; ++i)
     {
         SDL_Rect rect1 = {0, i * blockHeight, blockWidth, blockHeight};
@@ -56,13 +64,7 @@ void GameState::drawGameBorder()
         SDL_RenderCopy(Game::renderer, borderBlock, nullptr, &rect1);
         SDL_RenderCopy(Game::renderer, borderBlock, nullptr, &rect2);
     }
-    for (int i = 0; i <= cols + 1; ++i)
-    {
-        SDL_Rect rect1 = {i * blockWidth, 0, blockWidth, blockHeight};
-        SDL_Rect rect2 = {i * blockWidth, (rows + 1) * blockHeight, blockWidth, blockHeight};
-        SDL_RenderCopy(Game::renderer, borderBlock, nullptr, &rect1);
-        SDL_RenderCopy(Game::renderer, borderBlock, nullptr, &rect2);
-    }
+    
 }
 void GameState::drawGameState()
 {
@@ -124,7 +126,7 @@ void GameState::drawTime()
 }
 bool GameState::checkCollapse(Block *block)
 {
-    if (block->getTopLeft().getX() + 2 == cols || block->getTopLeft().getY() + 2 == rows)
+    if (block->getTopLeft().getX() + currentBlock->getN() - 1 == cols || block->getTopLeft().getY() + currentBlock->getN() - 1 == rows)
         return true;
     Point point = block->getTopLeft();
 
@@ -163,7 +165,7 @@ void GameState::updateBlock()
                     
                 }
             }
-            currentBlock->setTopLeft(Point(5, 0));
+            currentBlock->setTopLeft(Point(5, -2));
             cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl; 
             currentBlock = nextBlock.front();
             nextBlock.pop();
