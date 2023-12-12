@@ -9,11 +9,28 @@
 #define blockHeight 32
 #include <iostream>
 #include <string>
+<<<<<<< Updated upstream
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include <vector>
 #include "gameState.h"
 
+=======
+#include <vector>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include "SDL2/SDL_image.h"
+#include "Point.h"
+#include "Block.h"
+#include "Block_I.h"
+#include "Block_O.h"
+#include "Block_T.h"
+#include "Block_L.h"
+#include "Block_Z.h"
+#include "Block_S.h"
+#include "Block_J.h"
+#include "gameState.h"
+>>>>>>> Stashed changes
 using namespace std;
 
 class GameState;  // Forward declaration
