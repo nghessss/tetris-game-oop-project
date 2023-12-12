@@ -29,6 +29,8 @@ public:
     void drawGameBorder();
     void drawTime();
     void drawBlock();
+    //get
+    Block* getCurrentBlock();
 };
 
 #endif

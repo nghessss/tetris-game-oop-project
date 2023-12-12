@@ -24,7 +24,7 @@ GameState::GameState()
     for (int i = 0 ; i < 5; i++)
         nextBlock.push(blockList[rand() % 7]);
     currentBlock = blockList[rand() % 7];
-    speed = 0.05;
+    speed = 0.5;
 }
 SDL_Texture *loadImage(const char *filename)
 {
@@ -195,4 +195,7 @@ GameState::~GameState()
         delete blockList[i];
     }
     
+}
+Block* GameState::getCurrentBlock() {
+    return currentBlock;
 }
