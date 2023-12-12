@@ -1,9 +1,15 @@
 #pragma once
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
+#include <vector>
+#include <queue>
 #include "game.h"
+#include "Block.h"
+using namespace std;
+class Block;
+class Point;
 class GameState {
-    SDL_Texture *currentGameState[rows+1][cols+1];
+    SDL_Texture *currentGameState[rows+2][cols+2];
     static int timeStart;
     static int currentTime;
     double speed;
@@ -14,15 +20,18 @@ public:
     GameState();
     ~GameState();
     //update
-    bool checkCollapse(Block block);
+    bool checkCollapse(Block *block,Point point);
     Point getCollapsablePoint();
     void updateGameState();
     void updateBlock();
     //draw
+    
     void drawGameState();
     void drawGameBorder();
     void drawTime();
     void drawBlock();
+    //get
+    Block* getCurrentBlock();
 };
 
 #endif

@@ -7,19 +7,22 @@
 #define rows  20
 #define blockWidth  32
 #define blockHeight 32
+#define key_delay_constant 20
 #include <iostream>
 #include <string>
 #include <vector>
 #include <queue>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
-#include "Block.h"
+#include "SDL2/SDL_image.h"
+#include "Point.h"
 #include "gameState.h"
-
 using namespace std;
 
+class Block;
+
 class GameState;  // Forward declaration
+
 class Game {
 private:
     SDL_Window* window;
