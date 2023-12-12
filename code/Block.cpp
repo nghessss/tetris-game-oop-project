@@ -30,9 +30,6 @@ int Block::getNumRotation(){
 int Block::getN(){
     return n;
 }
-int Block::getTimePos(){
-    return timePos;
-}
 void Block::moveDown(){
     TopLeft.setY(TopLeft.getY() + 1);
 }

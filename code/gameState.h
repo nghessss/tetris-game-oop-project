@@ -2,18 +2,28 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 #include "game.h"
-
-SDL_Texture* loadImage(const char* filename);
+#include "Block.h"
 class GameState {
-    bool currentGameState[rows+1][cols+1];
+    SDL_Texture *currentGameState[rows+1][cols+1];
     static int timeStart;
     static int currentTime;
+    double speed;
+    Block* currentBlock;
+    queue<Block*> nextBlock;
+    vector<Block*> blockList;
 public:
     GameState();
+    ~GameState();
+    //update
+    bool checkCollapse(Block* block);
+    Point getCollapsablePoint();
+    void updateGameState();
+    void updateBlock();
+    //draw
     void drawGameState();
     void drawGameBorder();
     void drawTime();
-    void drawBlock(Block* &block);
+    void drawBlock();
 };
 
 #endif
