@@ -1,8 +1,13 @@
 #pragma once
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
+#include <vector>
+#include <queue>
 #include "game.h"
 #include "Block.h"
+using namespace std;
+class Block;
+class Point;
 class GameState {
     SDL_Texture *currentGameState[rows+1][cols+1];
     static int timeStart;

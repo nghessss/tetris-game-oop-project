@@ -15,27 +15,13 @@
 #include <SDL2/SDL_ttf.h>
 #include "SDL2/SDL_image.h"
 #include "Point.h"
-#include "Block.h"
-#include "Block_I.h"
-#include "Block_O.h"
-#include "Block_T.h"
-#include "Block_L.h"
-#include "Block_Z.h"
-#include "Block_S.h"
-#include "Block_J.h"
 #include "gameState.h"
 using namespace std;
 
 class Block;
-class Block_I;
-class Block_O;
-class Block_T;
-class Block_L;
-class Block_Z;
-class Block_S;
-class Block_J;
 
 class GameState;  // Forward declaration
+
 class Game {
 private:
     SDL_Window* window;

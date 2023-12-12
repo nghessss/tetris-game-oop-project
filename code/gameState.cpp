@@ -1,5 +1,12 @@
 #include "gameState.h"
 #include "game.h"
+#include "Block_I.h"
+#include "Block_O.h"
+#include "Block_T.h"
+#include "Block_L.h"
+#include "Block_Z.h"
+#include "Block_S.h"
+#include "Block_J.h"
 int GameState::timeStart = SDL_GetTicks();
 int GameState::currentTime = SDL_GetTicks() - timeStart;
 GameState::GameState()

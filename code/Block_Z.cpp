@@ -16,6 +16,6 @@ Block_Z::Block_Z(): Block(){
         {0, 0, 1},
         {0, 1, 1},
         {0, 1, 0}};
-    img = IMG_LoadTexture(Game::renderer, "image/red.png");
+    img = IMG_LoadTexture(Game::renderer, "img/block_Z.png");
 }
 Block_Z::~Block_Z(){}

@@ -1,10 +1,11 @@
 #pragma once
 #ifndef BLOCK_H
 #define BLOCK_H
-#include "game.h"
-#include <vector>
-using namespace std;
 
+#include <vector>
+#include "game.h"
+using namespace std;
+class Game;
 class Block{
 protected:
     vector<vector<vector<int>>> Shape;
@@ -12,6 +13,7 @@ protected:
     Point TopLeft;
     int num_rotation;
     int n;
+    
 public:
     Block();
     ~Block();
@@ -21,7 +23,7 @@ public:
     Point getTopLeft();
     int getNumRotation();
     int getN();
-
+    
     void moveDown();
     void moveLeft();
     void moveRight();

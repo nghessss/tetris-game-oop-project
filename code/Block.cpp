@@ -1,4 +1,5 @@
 #include "game.h"
+int Block::timePos = SDL_GetTicks();
 Block::Block(){
     n = 3;
     Shape.resize(4, vector<vector<int>>(n, vector<int>(n, 0)));
