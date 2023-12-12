@@ -20,11 +20,12 @@ public:
     GameState();
     ~GameState();
     //update
-    bool checkCollapse(Block* block);
+    bool checkCollapse(Block *block,Point point);
     Point getCollapsablePoint();
     void updateGameState();
     void updateBlock();
     //draw
+    
     void drawGameState();
     void drawGameBorder();
     void drawTime();
