@@ -98,11 +98,17 @@ void GameState::drawTime()
     SDL_FreeSurface(surface);
     // free font
     TTF_CloseFont(font);
-    // Present the renderer
-    // SDL_RenderPresent(renderer);
-    // // create a rect at bottom right
-    // SDL_Rect rect = {0, 0, 0, 0};
-    // SDL_RenderCopy(Game::renderer, texture, nullptr, &rect);
-    // SDL_FreeSurface(surface);
-    // SDL_DestroyTexture(texture);
+ 
+}
+void GameState::drawBlock(){
+    int random = rand() % 7;
+    Block* block = new Block_L();
+    for(int j = 0; j < 3; j++){
+        for(int k = 0; k < 3; k++){
+            if(block->getShape()[block->getNumRotation()+2][j][k] == 1 && currentGameState[j][k] == 0){
+                SDL_Rect rect = {(block->getTopLeft().getX() + k) * blockWidth, (block->getTopLeft().getY() + j) * blockHeight, blockWidth, blockHeight };
+                SDL_RenderCopy(Game::renderer, block->getImg(), nullptr, &rect);
+            }
+        }
+    }
 }

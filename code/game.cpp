@@ -63,6 +63,7 @@ void Game::Renderer() {
     gameState->drawGameBorder();
     gameState->drawGameState();
     gameState->drawTime();  
+    gameState->drawBlock();
     SDL_RenderPresent(renderer);
 }
 void Game::Clean() {

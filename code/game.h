@@ -9,12 +9,12 @@
 #define blockHeight 32
 #include <iostream>
 #include <string>
-
 #include <vector>
-#include "gameState.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "SDL2/SDL_image.h"
+#include <SDL2/SDL_image.h>
+#include "gameState.h"
+#include "Block.h"
 using namespace std;
 
 class GameState;  // Forward declaration
