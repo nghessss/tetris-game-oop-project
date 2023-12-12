@@ -15,3 +15,9 @@ void Point::setX(int x){
 void Point::setY(int y){
     this->y = y;
 }
+bool Point::operator==(const Point& other) const {
+    return this->x == other.x && this->y == other.y;
+}
+bool Point::operator!=(const Point& other) const {
+    return !(this->x == other.x && this->y == other.y);
+}

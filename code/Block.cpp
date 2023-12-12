@@ -50,8 +50,10 @@ void Block::changeDirect(){
         num_rotation = 0;
     }
 }
-void Block::space(){
-    while(true){
+void Block::space()
+{
+    while (true)
+    {
         moveDown();
     }
 }

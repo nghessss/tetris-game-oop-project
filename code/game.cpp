@@ -56,6 +56,7 @@ void Game::HandleEvent()
     static int downLeftKeyDelay = 0;
     static int downRightKeyDelay = 0;
     static bool upKeyReleased = true;
+    static bool isFallingFromSpace = false;
 
     int32_t key_count;
     const uint8_t *key_states = SDL_GetKeyboardState(&key_count);
@@ -71,6 +72,21 @@ void Game::HandleEvent()
     else
     {
         upKeyReleased = true;
+    }
+
+    if (key_states[SDL_SCANCODE_SPACE]) {
+        if (!isFallingFromSpace) {
+            Point targetPoint = gameState->getCollapsablePoint();
+
+            while (gameState->getCurrentBlock()->getTopLeft() != targetPoint) {
+                gameState->getCurrentBlock()->moveDown();
+            }
+
+            isFallingFromSpace = true;
+        }
+    }
+    else {
+        isFallingFromSpace = false;
     }
 
     if (key_states[SDL_SCANCODE_DOWN] && key_states[SDL_SCANCODE_LEFT])

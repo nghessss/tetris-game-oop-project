@@ -138,6 +138,12 @@ bool GameState::checkCollapse(Block *block, Point point)
 }
 Point GameState::getCollapsablePoint()
 {
+    Point point = currentBlock->getTopLeft();
+    while (!checkCollapse(currentBlock, Point(point.getX(), point.getY() + 1)))
+    {
+        point.setY(point.getY() + 1);
+    }
+    return point;
 }
 void GameState::updateBlock()
 {
