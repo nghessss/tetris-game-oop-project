@@ -11,8 +11,12 @@ Block::Block(){
         }
     }
     num_rotation = 0;
+    img = IMG_LoadTexture(Game::renderer, "image/ye.png");
     TopLeft.setX(5);
     TopLeft.setY(0);
+}
+void Block::setTopLeft(Point p){
+    TopLeft = p;
 }
 Block::~Block(){
 }

@@ -55,7 +55,7 @@ void updateTime() {
 }
 void Game::Update() {
     updateTime();
-       
+    gameState->updateBlock();
 }
 void Game::Renderer() {
     SDL_RenderClear(renderer);

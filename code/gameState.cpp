@@ -14,15 +14,17 @@ GameState::GameState()
     for (int i = 0; i <= rows; ++i)
         for (int j = 0; j <= cols; j++)
             currentGameState[i][j] = NULL;
+    blockList.push_back(new Block_T());
     blockList.push_back(new Block_I());
     blockList.push_back(new Block_O());
-    blockList.push_back(new Block_T());
     blockList.push_back(new Block_L());
     blockList.push_back(new Block_Z());
     blockList.push_back(new Block_S());
     blockList.push_back(new Block_J());
+    for (int i = 0 ; i < 5; i++)
+        nextBlock.push(blockList[rand() % 7]);
     currentBlock = blockList[rand() % 7];
-    speed = 1;
+    speed = 0.05;
 }
 SDL_Texture *loadImage(const char *filename)
 {
@@ -75,6 +77,10 @@ void GameState::drawGameState()
             {
                 SDL_Rect rect = {j * blockWidth, i * blockHeight, blockWidth, blockHeight};
                 SDL_RenderCopy(Game::renderer, backgroundBlock, nullptr, &rect);
+            }else {
+                SDL_Rect rect = {j * blockWidth, i * blockHeight, blockWidth, blockHeight};
+                SDL_RenderCopy(Game::renderer, currentGameState[i][j], nullptr, &rect);
+            
             }
         }
     }
@@ -121,6 +127,9 @@ bool GameState::checkCollapse(Block *block)
     if (block->getTopLeft().getX() + 2 == cols || block->getTopLeft().getY() + 2 == rows)
         return true;
     Point point = block->getTopLeft();
+
+    point.setY(point.getY() + 1);
+
     for (int col = 1; col <= cols; col++)
     {
         for (int i = 0; i < block->getN(); i++)
@@ -137,33 +146,37 @@ Point GameState::getCollapsablePoint()
 }
 void GameState::updateBlock()
 {
-    if (SDL_GetTicks() - Block::timePos >= 1000 / speed)
+    if (SDL_GetTicks() - Block::timePos >= 1000 * speed)
     {
         Block::timePos = SDL_GetTicks();
-        if (checkCollapse(currentBlock) == 0)
+        if (checkCollapse(currentBlock) == 0){
             currentBlock->moveDown();
-        else
+            cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl; 
+        }else
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < currentBlock->getN(); j++)
             {
-                for (int k = 0; k < 3; k++)
+                for (int k = 0; k < currentBlock->getN(); k++)
                 {
                     if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1)
-                    {
                         currentGameState[currentBlock->getTopLeft().getY() + j][currentBlock->getTopLeft().getX() + k] = currentBlock->getImg();
-                    }
+                    
                 }
             }
-            currentBlock = blockList[rand() % 7];
+            currentBlock->setTopLeft(Point(5, 0));
+            cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl; 
+            currentBlock = nextBlock.front();
+            nextBlock.pop();
+            nextBlock.push(blockList[rand() % 7]);
         }
     }
 }
 void GameState::drawBlock()
 {
 
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < currentBlock->getN(); j++)
     {
-        for (int k = 0; k < 3; k++)
+        for (int k = 0; k < currentBlock->getN(); k++)
         {
             if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1 && currentGameState[j][k] == NULL)
             {
@@ -179,4 +192,5 @@ GameState::~GameState()
     {
         delete blockList[i];
     }
+    
 }

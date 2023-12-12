@@ -21,9 +21,10 @@ public:
     vector<vector<vector<int>>> getShape();
     SDL_Texture* getImg();
     Point getTopLeft();
+
     int getNumRotation();
     int getN();
-    
+    void setTopLeft(Point p);
     void moveDown();
     void moveLeft();
     void moveRight();

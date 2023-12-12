@@ -9,7 +9,7 @@ using namespace std;
 class Block;
 class Point;
 class GameState {
-    SDL_Texture *currentGameState[rows+1][cols+1];
+    SDL_Texture *currentGameState[rows+2][cols+2];
     static int timeStart;
     static int currentTime;
     double speed;
