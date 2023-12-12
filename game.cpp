@@ -35,7 +35,6 @@ Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fu
     
 }
 
-const int KEY_DELAY_CONSTANT = 20;
 
 void Game::HandleEvent() {
     SDL_PollEvent(&event);
@@ -59,7 +58,7 @@ void Game::HandleEvent() {
 
     if (key_states[SDL_SCANCODE_UP]) {
         if (upKeyReleased) {
-            gameState->currentBlock->changeDirect();
+            gameState->getCurrentBlock()->changeDirect();
             upKeyReleased = false;
         }
     } else {
@@ -68,41 +67,41 @@ void Game::HandleEvent() {
 
     if (key_states[SDL_SCANCODE_DOWN] && key_states[SDL_SCANCODE_LEFT]) {
         downLeftKeyDelay++;
-        if (downLeftKeyDelay == KEY_DELAY_CONSTANT) {
-            gameState->currentBlock->moveDown();
-            gameState->currentBlock->moveLeft();
+        if (downLeftKeyDelay == key_delay_constant) {
+            gameState->getCurrentBlock()->moveDown();
+            gameState->getCurrentBlock()->moveLeft();
             downLeftKeyDelay = 0;
         }
     }
     else if (key_states[SDL_SCANCODE_DOWN] && key_states[SDL_SCANCODE_RIGHT]) {
         downRightKeyDelay++;
-        if (downRightKeyDelay == KEY_DELAY_CONSTANT) {
-            gameState->currentBlock->moveDown();
-            gameState->currentBlock->moveRight();
+        if (downRightKeyDelay == key_delay_constant) {
+            gameState->getCurrentBlock()->moveDown();
+            gameState->getCurrentBlock()->moveRight();
             downRightKeyDelay = 0;
         }
     }
     else {
         if (key_states[SDL_SCANCODE_DOWN]) {
             downKeyDelay++;
-            if (downKeyDelay == KEY_DELAY_CONSTANT) {
-                gameState->currentBlock->moveDown();
+            if (downKeyDelay == key_delay_constant) {
+                gameState->getCurrentBlock()->moveDown();
                 downKeyDelay = 0;
             }
         }
         else {
             if (key_states[SDL_SCANCODE_LEFT]) {
                 leftKeyDelay++;
-                if (leftKeyDelay == KEY_DELAY_CONSTANT) {
-                    gameState->currentBlock->moveLeft();
+                if (leftKeyDelay == key_delay_constant) {
+                    gameState->getCurrentBlock()->moveLeft();
                     leftKeyDelay = 0;
                 }
             }
             
             if (key_states[SDL_SCANCODE_RIGHT]) {
                 rightKeyDelay++;
-                if (rightKeyDelay == KEY_DELAY_CONSTANT) {
-                    gameState->currentBlock->moveRight();
+                if (rightKeyDelay == key_delay_constant) {
+                    gameState->getCurrentBlock()->moveRight();
                     rightKeyDelay = 0;
                 }
             }
