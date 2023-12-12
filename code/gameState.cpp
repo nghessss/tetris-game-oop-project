@@ -54,8 +54,6 @@ void GameState::drawGameState() {
             
         }
     }
-<<<<<<< Updated upstream
-=======
 }
 void GameState::drawBlock(Block* &block){
     cout << block->getTopLeft().getX() << " " << block->getTopLeft().getY() << endl;
@@ -111,5 +109,4 @@ void GameState::drawTime()
     // SDL_RenderCopy(Game::renderer, texture, nullptr, &rect);
     // SDL_FreeSurface(surface);
     // SDL_DestroyTexture(texture);
->>>>>>> Stashed changes
 }

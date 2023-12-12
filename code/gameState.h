@@ -13,7 +13,7 @@ public:
     void drawGameState();
     void drawGameBorder();
     void drawTime();
-    void drawBlock(Block*& block);
+    void drawBlock(Block* &block);
 };
 
 #endif
