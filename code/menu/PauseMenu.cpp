@@ -5,7 +5,6 @@ Audio PauseMenu::audioPauseMenu;
 
 PauseMenu::PauseMenu()
 {
-	audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3");
 	for (int i = 0; i < n; i++)
 	{
 		textBoxes[i].setX(screen_width / 2);
@@ -50,6 +49,7 @@ void PauseMenu::HandleEvent()
 			if (pos == 1)
 			{
 				on = false;
+				audioPauseMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
 					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3");
 				MainMenu::on = true;

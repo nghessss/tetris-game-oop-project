@@ -52,6 +52,7 @@ void Game::HandleEvent()
             if (event.key.keysym.sym == SDLK_ESCAPE)
             {
                 std::cout << "PAUSE MENU IS ON" << std::endl;
+                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3");
                 on = false;
                 PauseMenu::on = true;
             }
