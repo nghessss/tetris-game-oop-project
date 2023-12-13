@@ -253,6 +253,7 @@ void GameState::updateBlock()
         }
         else
         {
+            Audio hitSound;
             for (int j = 0; j < currentBlock->getN(); j++)
             {
                 for (int k = 0; k < currentBlock->getN(); k++)
@@ -263,10 +264,13 @@ void GameState::updateBlock()
             }
             currentBlock->setTopLeft(Point(5, 0));
             currentBlock->setNumRotation(0);
+            hitSound.playBackgroundMusic("audio/BlockHit.mp3");
+            SDL_Delay(200);
             //cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
             currentBlock = nextBlock.front();
             nextBlock.pop();
             nextBlock.push(createBlock());
+            hitSound.stopBackgroundMusic();
         }
     }
 }

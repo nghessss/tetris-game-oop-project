@@ -3,6 +3,8 @@
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
 bool Game::isRunning = false;
+bool Game::on = false;
+
 Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullscreen)
 {
     int flags = 0;
@@ -43,11 +45,19 @@ void Game::HandleEvent()
     SDL_PollEvent(&event);
     switch (event.type)
     {
-    case SDL_QUIT:
-        isRunning = false;
-        break;
-    default:
-        break;
+        case SDL_QUIT:
+            isRunning = false;
+            break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE)
+            {
+                std::cout << "PAUSE MENU IS ON" << std::endl;
+                on = false;
+                PauseMenu::on = true;
+            }
+            break;
+        default:
+            break;
     }
 
     static int leftKeyDelay = 0;
@@ -188,6 +198,7 @@ void Game::Renderer()
 void Game::Clean()
 {
     delete gameState;
+    audioManager.stopBackgroundMusic();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
