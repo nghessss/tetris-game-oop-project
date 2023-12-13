@@ -1,9 +1,11 @@
 #include "PauseMenu.h"
 
 bool PauseMenu::on = false;
+Audio PauseMenu::audioPauseMenu;
 
 PauseMenu::PauseMenu()
 {
+	audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3");
 	for (int i = 0; i < n; i++)
 	{
 		textBoxes[i].setX(screen_width / 2);
@@ -13,7 +15,9 @@ PauseMenu::PauseMenu()
 		textBoxes[2].setMessage("QUIT");
 	}
 };
-PauseMenu::~PauseMenu(){};
+PauseMenu::~PauseMenu(){
+	audioPauseMenu.stopBackgroundMusic();
+};
 
 void PauseMenu::HandleEvent()
 {
@@ -46,9 +50,10 @@ void PauseMenu::HandleEvent()
 			if (pos == 1)
 			{
 				on = false;
+				if (!MainMenu::isMuted)
+					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3");
 				MainMenu::on = true;
 			}
-
 			if (pos == 2) 
 				Game::isRunning = false;
 			break;
