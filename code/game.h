@@ -7,7 +7,7 @@
 #define rows  20
 #define blockWidth  32
 #define blockHeight 32
-#define key_delay_constant 20
+#define key_delay_constant 5
 #include <iostream>
 #include <string>
 #include <vector>

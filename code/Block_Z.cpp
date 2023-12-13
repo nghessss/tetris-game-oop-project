@@ -13,9 +13,9 @@ Block_Z::Block_Z(): Block(){
         {1, 1, 0},
         {0, 1, 1}};
     Shape[3] = {
-        {0, 0, 1},
-        {0, 1, 1},
-        {0, 1, 0}};
+        {0, 1, 0},
+        {1, 1, 0},
+        {1, 0, 0}};
     img = IMG_LoadTexture(Game::renderer, "image/red.png");
     shadowImg = IMG_LoadTexture(Game::renderer, "image/shadow.png");
 }

@@ -23,6 +23,7 @@ public:
     ~GameState();
     //update
     bool checkCollapse(Block *block,Point point);
+    bool checkCanChangeDirect(Block *block);
     Point getCollapsablePoint();
     void updateGameState();
     void updateBlock();
@@ -34,6 +35,7 @@ public:
     void drawBlock();
     void drawShadowBlock();
     void drawScore();
+    void drawNextBlocks();
     //get
     Block* getCurrentBlock();
 };

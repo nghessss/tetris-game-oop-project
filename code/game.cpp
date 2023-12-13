@@ -65,7 +65,11 @@ void Game::HandleEvent()
     {
         if (upKeyReleased)
         {
-            gameState->getCurrentBlock()->changeDirect();
+            Block *block = new Block(*gameState->getCurrentBlock());
+            if (gameState->checkCanChangeDirect(block)){
+                gameState->checkCanChangeDirect(gameState->getCurrentBlock());
+            }
+            delete block;
             upKeyReleased = false;
         }
     }
@@ -79,7 +83,6 @@ void Game::HandleEvent()
             Point targetPoint = gameState->getCollapsablePoint();
 
             gameState->getCurrentBlock()->space(targetPoint);
-
             isFallingFromSpace = true;
         }
     }
@@ -179,6 +182,7 @@ void Game::Renderer()
     gameState->drawScore();
     gameState->drawShadowBlock();
     gameState->drawBlock();
+    gameState->drawNextBlocks();
     SDL_RenderPresent(renderer);
 }
 void Game::Clean()

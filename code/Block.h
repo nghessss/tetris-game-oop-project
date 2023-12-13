@@ -17,15 +17,16 @@ protected:
     
 public:
     Block();
-    ~Block();
+    Block(const Block& other);
+    virtual ~Block();
     static int timePos;
     vector<vector<vector<int>>> getShape();
     SDL_Texture* getImg();
     SDL_Texture* getShadowImg();
     Point getTopLeft();
-
     int getNumRotation();
     int getN();
+    void setNumRotation(int num);
     void setTopLeft(Point p);
     void moveDown();
     void moveLeft();
