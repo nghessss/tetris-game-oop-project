@@ -5,6 +5,5 @@ Block_O::Block_O(): Block(){
     Shape[0] = Shape[1] = Shape[2] = Shape[3] ={{1 ,1},
                                                 {1, 1}};
     img = IMG_LoadTexture(Game::renderer, "image/ye.png");
-    shadowImg = IMG_LoadTexture(Game::renderer, "image/shadow.png");
 }
 Block_O::~Block_O(){}

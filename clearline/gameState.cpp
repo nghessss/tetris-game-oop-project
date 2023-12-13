@@ -9,7 +9,6 @@
 #include "Block_J.h"
 int GameState::timeStart = SDL_GetTicks();
 int GameState::currentTime = SDL_GetTicks() - timeStart;
-int GameState::score = 0;
 
 GameState::GameState()
 {
@@ -104,70 +103,25 @@ void GameState::drawTime()
     int minutes = seconds / 60;
     seconds = seconds % 60;
     int milliseconds = currentTime % 1000;
-
-    string time = "TIME";
-    string time_update = to_string(minutes) + ":" + to_string(seconds) + ":" + to_string(milliseconds);
-
-    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 40);
-    TTF_Font *font_update = TTF_OpenFont("build/novem___.ttf", 24);
-    if (font == nullptr  && font_update == nullptr)
+    string time = to_string(minutes) + ":" + to_string(seconds) + ":" + to_string(milliseconds);
+    cout << time << endl;
+    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 24);
+    if (font == nullptr)
     {
+
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
         SDL_Delay(10000);
     }
-    // DISPLAY "TIME"
-    SDL_Color color = {255, 255, 0};
+    SDL_Color color = {255, 255, 255};
     SDL_Surface *surface = TTF_RenderText_Solid(font, time.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
-    SDL_Rect textRect = {(cols + 3) * 32, (rows + (-1)) * 32, surface->w, surface->h};
-    // DISPLAY TIME_UPDATE
-    SDL_Color color_update = {255, 255, 255};
-    SDL_Surface *surface_update = TTF_RenderText_Solid(font_update, time_update.c_str(), color_update);
-    SDL_Texture *texture_update = SDL_CreateTextureFromSurface(Game::renderer, surface_update);
-    SDL_Rect textRect_update = {(cols + 3) * 32, (rows + 1) * 32, surface_update->w, surface_update->h};
 
+    SDL_Rect textRect = {(cols + 3) * 32, (rows + 2) * 32, surface->w, surface->h};
     SDL_RenderCopy(Game::renderer, texture, nullptr, &textRect);
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
-    SDL_RenderCopy(Game::renderer, texture_update, nullptr, &textRect_update);
-    SDL_DestroyTexture(texture_update);
-    SDL_FreeSurface(surface_update);
     // free font
     TTF_CloseFont(font);
-    TTF_CloseFont(font_update);
-}
-void GameState::drawScore() 
-{
-    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 40);
-    TTF_Font *font_update = TTF_OpenFont("build/novem___.ttf", 24);
-    if (font == nullptr && font_update)
-    {
-        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-        SDL_Delay(10000);
-    }
-    // DISPLAY "SCORE"
-    string SCORE = "SCORE";
-    SDL_Color color = {255, 255, 0};
-    SDL_Surface *surface = TTF_RenderText_Solid(font, SCORE.c_str(), color);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
-    SDL_Rect textRect = {(cols + 3) * 32, (rows + (-4)) * 32, surface->w, surface->h};
-    // DISPLAY SCORE
-    string SCORE_update = to_string(score);
-    SDL_Color color_update = {255, 255, 255};
-    SDL_Surface *surface_update = TTF_RenderText_Solid(font_update, SCORE_update.c_str(), color_update);
-    SDL_Texture *texture_update = SDL_CreateTextureFromSurface(Game::renderer, surface_update);
-    SDL_Rect textRect_update = {(cols + 3) * 32, (rows + (-2)) * 32, surface_update->w, surface_update->h};
-
-    SDL_RenderCopy(Game::renderer, texture, nullptr, &textRect);
-    SDL_RenderCopy(Game::renderer, texture_update, nullptr, &textRect_update);
-
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture_update);
-    SDL_FreeSurface(surface_update);
-    // free font
-    TTF_CloseFont(font);
-    TTF_CloseFont(font_update);
 }
 bool GameState::checkCollapse(Block *block, Point point)
 {
@@ -181,31 +135,6 @@ bool GameState::checkCollapse(Block *block, Point point)
             }
     }
     return false;
-}
-bool GameState::checkCanChangeDirect(Block *block){
-    
-    if (!block) {
-        std::cerr << "Error: Null pointer passed to checkCanChangeDirect." << std::endl;
-        return false;
-    }
-
-    block->changeDirect();
-
-    if (checkCollapse(block, block->getTopLeft()) == 1) {
-        while (block->getTopLeft().getX() <= 0)
-            block->moveRight();
-
-        while (block->getTopLeft().getX() + block->getN() - 1 > cols)
-            block->moveLeft();
-
-        if (checkCollapse(block, block->getTopLeft()) == 1) {
-            std::cerr << "Error: Check collapse failed after adjustments." << std::endl;
-            return false;
-        }
-    }
-
-    return true;
-
 }
 Point GameState::getCollapsablePoint()
 {
@@ -226,7 +155,7 @@ void GameState::updateBlock()
         if (checkCollapse(currentBlock, point) == 0)
         {
             currentBlock->moveDown();
-            //cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
+            cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
         }
         else
         {
@@ -239,7 +168,7 @@ void GameState::updateBlock()
                 }
             }
             currentBlock->setTopLeft(Point(5, 0));
-            //cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
+            cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
             currentBlock = nextBlock.front();
             nextBlock.pop();
             nextBlock.push(blockList[rand() % 7]);
@@ -261,25 +190,8 @@ void GameState::drawBlock()
         }
     }
 }
-void GameState::drawShadowBlock()
-{
-    Point shadowPoint = getCollapsablePoint();  // Get the collapsable point
-    for (int j = 0; j < currentBlock->getN(); j++)
-    {
-        for (int k = 0; k < currentBlock->getN(); k++)
-        {
-            if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1 && currentGameState[shadowPoint.getY() + j][shadowPoint.getX() + k] == NULL)
-            {
-                SDL_Rect rect = {(shadowPoint.getX() + k) * blockWidth, (shadowPoint.getY() + j) * blockHeight, blockWidth, blockHeight};
-                SDL_RenderCopy(Game::renderer, currentBlock->getShadowImg(), nullptr, &rect);
-            }
-        }
-    }
-}
-
 void GameState::clearLines()
 {
-    int linesCleared = 0;
     for (int i = rows; i >= 1; --i)
     {
         bool isLineComplete = true;
@@ -292,25 +204,22 @@ void GameState::clearLines()
                 break;
             }
         }
-
-        if (!isLineComplete)
+        if (isLineComplete)
         {
-            continue;
+            for (int k = i; k > 1; --k)
+            {
+                for (int j = 1; j <= cols; ++j)
+                {
+                    currentGameState[k][j] = currentGameState[k - 1][j];
+                }
+            }
+            for (int j = 1; j <= cols; ++j)
+            {
+                currentGameState[1][j] = NULL;
+            }
+            ++i;
         }
-
-        // Shift rows down efficiently
-        for (int k = i; k > 1; --k)
-        {
-            std::copy(currentGameState[k - 1] + 1, currentGameState[k - 1] + cols + 1, currentGameState[k] + 1);
-        }
-
-        // Set cleared line to NULL using memset
-        std::memset(currentGameState[1] + 1, 0, cols * sizeof(Block*));
-
-        ++i;
-        ++linesCleared;
     }
-    score += linesCleared;
 }
 GameState::~GameState()
 {

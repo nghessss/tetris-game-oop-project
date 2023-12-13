@@ -7,13 +7,11 @@
 #define rows  20
 #define blockWidth  32
 #define blockHeight 32
-#define key_delay_constant 5
+#define key_delay_constant 20
 #include <iostream>
 #include <string>
 #include <vector>
 #include <queue>
-#include <cstring>
-#include <algorithm>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "SDL2/SDL_image.h"
