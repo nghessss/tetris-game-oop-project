@@ -18,7 +18,11 @@
 #include <SDL2/SDL_ttf.h>
 #include "SDL2/SDL_image.h"
 #include "Point.h"
+#include "Audio.h"
 #include "gameState.h"
+#include "menu/MainMenu.h"
+#include "menu/PauseMenu.h"
+
 using namespace std;
 
 class Block;
@@ -30,7 +34,9 @@ private:
     SDL_Window* window;
 
 public:
+    Audio audioManager;
     static bool isRunning;
+    static bool on;  // menu
     static SDL_Renderer* renderer;
     static SDL_Event event;
     

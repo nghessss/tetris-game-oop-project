@@ -13,8 +13,10 @@ class GameState {
     static int timeStart;
     static int currentTime;
     static int score;
+    static bool checkHold;
     double speed;
     Block* currentBlock;
+    Block* holdBlock;
     queue<Block*> nextBlock;
     int lineCount;
 public:
@@ -35,8 +37,13 @@ public:
     void drawShadowBlock();
     void drawScore();
     void drawNextBlocks();
+    void drawHold();
+    void drawHoldBlock();
     //get
     Block* getCurrentBlock();
+    Block* getHoldBlock();
+    
+    void holdCurrentBlock();
 };
 
 #endif
