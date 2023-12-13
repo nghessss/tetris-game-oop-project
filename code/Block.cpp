@@ -112,3 +112,33 @@ void Block::space(Point targetPoint)
         moveDown();
     }
 }
+Block& Block::operator=(const Block& other) {
+    if (this != &other) {  // Check for self-assignment
+        // Deep copy the Shape
+        this->Shape.clear();  // Clear existing content
+        for (const auto& layer : other.Shape) {
+            vector<vector<int>> newLayer;
+            for (const auto& row : layer) {
+                newLayer.push_back(row);  // Copy each row
+            }
+            this->Shape.push_back(newLayer);  // Copy each layer
+        }
+
+        // Deep copy the SDL_Texture*
+        SDL_Surface* imgSurface = IMG_Load("image/your_image.png");  // Replace with the actual image path
+        if (imgSurface) {
+            this->img = SDL_CreateTextureFromSurface(Game::renderer, imgSurface);
+            SDL_FreeSurface(imgSurface);
+        } else {
+            // Handle error loading the image
+            this->img = nullptr;
+        }
+
+        // Copy other members
+        this->shadowImg = other.shadowImg;
+        this->TopLeft = other.TopLeft;
+        this->num_rotation = other.num_rotation;
+        this->n = other.n;
+    }
+    return *this;
+}

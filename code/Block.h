@@ -33,5 +33,6 @@ public:
     void moveRight();
     void changeDirect();
     void space(Point targetPoint);
+    Block& operator=(const Block& other);
 };
 #endif

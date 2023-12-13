@@ -16,7 +16,6 @@ class GameState {
     double speed;
     Block* currentBlock;
     queue<Block*> nextBlock;
-    vector<Block*> blockList;
     int lineCount;
 public:
     GameState();

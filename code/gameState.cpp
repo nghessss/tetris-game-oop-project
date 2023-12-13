@@ -10,22 +10,46 @@
 int GameState::timeStart = SDL_GetTicks();
 int GameState::currentTime = SDL_GetTicks() - timeStart;
 int GameState::score = 0;
-
+Block* createBlock(){
+    int random = rand() % 7;
+    Block* block = NULL;
+    switch (random)
+    {  
+    case 0:
+        block = new Block_T();
+        break;
+    case 1:
+        block = new Block_I();
+        break;
+    case 2:
+        block = new Block_O();
+        break;
+    case 3:
+        block = new Block_L();
+        break;
+    case 4:
+        block = new Block_Z();
+        break;
+    case 5:
+        block = new Block_S();
+        break;
+    case 6:
+        block = new Block_J();
+        break;    
+    }
+    return block;
+}
 GameState::GameState()
 {
     for (int i = 0; i <= rows + 1; ++i)
         for (int j = 0; j <= cols + 1; j++)
             currentGameState[i][j] = NULL;
-    blockList.push_back(new Block_T());
-    blockList.push_back(new Block_I());
-    blockList.push_back(new Block_O());
-    blockList.push_back(new Block_L());
-    blockList.push_back(new Block_Z());
-    blockList.push_back(new Block_S());
-    blockList.push_back(new Block_J());
     for (int i = 0; i < 3; i++)
-        nextBlock.push(blockList[rand() % 7]);
-    currentBlock = blockList[rand() % 7];
+    {
+        Block* temp = createBlock();
+        nextBlock.push(temp);
+    }
+    currentBlock = createBlock();
     speed = 0.2;
 }
 Block *GameState::getCurrentBlock()
@@ -188,7 +212,6 @@ bool GameState::checkCanChangeDirect(Block *block){
         std::cerr << "Error: Null pointer passed to checkCanChangeDirect." << std::endl;
         return false;
     }
-
     block->changeDirect();
 
     if (checkCollapse(block, block->getTopLeft()) == 1) {
@@ -243,7 +266,7 @@ void GameState::updateBlock()
             //cout << currentBlock->getTopLeft().getX() << " " << currentBlock->getTopLeft().getY() << endl;
             currentBlock = nextBlock.front();
             nextBlock.pop();
-            nextBlock.push(blockList[rand() % 7]);
+            nextBlock.push(createBlock());
         }
     }
 }
@@ -280,7 +303,7 @@ void GameState::drawShadowBlock()
 void GameState::drawNextBlocks()
 {
     int xOffset = cols + 3 ;
-    int yOffset = rows - 16;
+    int yOffset = 3;
 
     TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 24);
     if (font == nullptr)
@@ -374,8 +397,5 @@ void GameState::clearLines()
 }
 GameState::~GameState()
 {
-    for (int i = 0; i < blockList.size(); i++)
-    {
-        delete blockList[i];
-    }
+    delete currentBlock;
 }
