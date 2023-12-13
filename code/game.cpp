@@ -78,9 +78,7 @@ void Game::HandleEvent()
         if (!isFallingFromSpace) {
             Point targetPoint = gameState->getCollapsablePoint();
 
-            while (gameState->getCurrentBlock()->getTopLeft() != targetPoint) {
-                gameState->getCurrentBlock()->moveDown();
-            }
+            gameState->getCurrentBlock()->space(targetPoint);
 
             isFallingFromSpace = true;
         }
@@ -88,7 +86,7 @@ void Game::HandleEvent()
     else {
         isFallingFromSpace = false;
     }
-
+    
     if (key_states[SDL_SCANCODE_DOWN] && key_states[SDL_SCANCODE_LEFT])
     {
         downLeftKeyDelay++;
@@ -169,6 +167,7 @@ void Game::Update()
 {
     updateTime();
     gameState->updateBlock();
+    gameState->clearLines();
 }
 void Game::Renderer()
 {
@@ -177,6 +176,8 @@ void Game::Renderer()
     gameState->drawGameBorder();
     gameState->drawGameState();
     gameState->drawTime();
+    gameState->drawScore();
+    gameState->drawShadowBlock();
     gameState->drawBlock();
     SDL_RenderPresent(renderer);
 }

@@ -8,6 +8,6 @@ int main(int argc, char* argv[]){
         game->Renderer();
         
     }
-    
+    delete game;
     return 0;
 }

@@ -26,6 +26,9 @@ vector<vector<vector<int>>> Block::getShape(){
 SDL_Texture* Block::getImg(){
     return img;
 }
+SDL_Texture* Block::getShadowImg(){
+    return shadowImg;
+}
 Point Block::getTopLeft(){
     return TopLeft;
 }
@@ -50,10 +53,9 @@ void Block::changeDirect(){
         num_rotation = 0;
     }
 }
-void Block::space()
-{
-    while (true)
-    {
+void Block::space(Point targetPoint) {
+    // Move the block down until it reaches the target point
+    while (getTopLeft() != targetPoint) {
         moveDown();
     }
 }

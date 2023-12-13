@@ -10,6 +10,7 @@ class Block{
 protected:
     vector<vector<vector<int>>> Shape;
     SDL_Texture* img;
+    SDL_Texture* shadowImg;
     Point TopLeft;
     int num_rotation;
     int n;
@@ -20,6 +21,7 @@ public:
     static int timePos;
     vector<vector<vector<int>>> getShape();
     SDL_Texture* getImg();
+    SDL_Texture* getShadowImg();
     Point getTopLeft();
 
     int getNumRotation();
@@ -29,6 +31,6 @@ public:
     void moveLeft();
     void moveRight();
     void changeDirect();
-    void space();
+    void space(Point targetPoint);
 };
 #endif

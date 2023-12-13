@@ -24,5 +24,6 @@ Block_I::Block_I(): Block(){
         {0, 1, 0, 0}};
     
     img = IMG_LoadTexture(Game::renderer, "image/green2.png");
+    shadowImg = IMG_LoadTexture(Game::renderer, "image/shadow.png");
 }
 Block_I::~Block_I(){}
