@@ -9,10 +9,10 @@
 #include "Block_J.h"
 int GameState::timeStart = SDL_GetTicks();
 int GameState::currentTime = SDL_GetTicks() - timeStart;
-int GameState::clearedLines = 0;
 long long GameState::score = 0;
-int GameState::combo = 0;
+int GameState::clearedLines = 0;
 bool GameState::checkHold = true;
+
 Block* createBlock(){
     int random = rand() % 7;
     Block* block = NULL;
@@ -55,8 +55,8 @@ GameState::GameState()
     holdBlock = NULL;
     currentBlock = createBlock();
     speed = 0.5;
-
-
+    speedMultiplier = 0.05;
+    gameMode = 2;
 }
 Block *GameState::getCurrentBlock()
 {
@@ -98,6 +98,7 @@ void GameState::drawGameBorder()
         currentGameState[i][0] = borderBlock;
         currentGameState[i][cols + 1] = borderBlock;
     }
+
 }
 void GameState::drawGameState()
 {
@@ -154,12 +155,12 @@ void GameState::drawTime()
     SDL_Color color = {255, 255, 0};
     SDL_Surface *surface = TTF_RenderText_Solid(font, time.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
-    SDL_Rect textRect = {(cols + 3) * 32, (rows - 7) * 32, surface->w, surface->h};
+    SDL_Rect textRect = {(cols + 3) * 32, (rows + (-7)) * 32, surface->w, surface->h};
     // DISPLAY TIME_UPDATE
     SDL_Color color_update = {255, 255, 255};
     SDL_Surface *surface_update = TTF_RenderText_Solid(font_update, time_update.c_str(), color_update);
     SDL_Texture *texture_update = SDL_CreateTextureFromSurface(Game::renderer, surface_update);
-    SDL_Rect textRect_update = {(cols + 3) * 32, (rows - 5) * 32, surface_update->w, surface_update->h};
+    SDL_Rect textRect_update = {(cols + 3) * 32, (rows + -5) * 32, surface_update->w, surface_update->h};
 
     SDL_RenderCopy(Game::renderer, texture, nullptr, &textRect);
     SDL_DestroyTexture(texture);
@@ -170,6 +171,35 @@ void GameState::drawTime()
     // free font
     TTF_CloseFont(font);
     TTF_CloseFont(font_update);
+}
+void GameState::drawBlurBackground() {
+    // SDL_Rect rect = {288, 176, 416, 288};
+    // SDL_Texture *backgroundBlurTexture = loadImage("image/effect/Blur.png");
+    // SDL_RenderCopy(Game::renderer, backgroundBlurTexture, NULL, &rect);
+    // SDL_DestroyTexture(backgroundBlurTexture);
+    // HOLD
+    SDL_Rect rectHold = {288, 16, 416, 128};
+    SDL_Texture *backgroundBlurTextureHold = loadImage("image/effect/NoBlur.png");
+    SDL_RenderCopy(Game::renderer, backgroundBlurTextureHold, NULL, &rectHold);
+    SDL_DestroyTexture(backgroundBlurTextureHold);
+    SDL_Rect rectHold2 = {288, 16, 416, 32};
+    SDL_Texture *backgroundBlurTextureHold2 = loadImage("image/effect/TextHold.png");
+    SDL_RenderCopy(Game::renderer, backgroundBlurTextureHold2, NULL, &rectHold2);
+    SDL_DestroyTexture(backgroundBlurTextureHold2);
+    // NEXT
+    SDL_Rect rectNext = {288, 176, 416, 288};
+    SDL_Texture *backgroundBlurTextureNext = loadImage("image/effect/NoBlur.png");
+    SDL_RenderCopy(Game::renderer, backgroundBlurTextureNext, NULL, &rectNext);
+    SDL_DestroyTexture(backgroundBlurTextureNext);
+    SDL_Rect rectNext2 = {288, 176, 416, 32};
+    SDL_Texture *backgroundBlurTextureNext2 = loadImage("image/effect/TextHold.png");
+    SDL_RenderCopy(Game::renderer, backgroundBlurTextureNext2, NULL, &rectNext2);
+    SDL_DestroyTexture(backgroundBlurTextureNext2);
+    // SCORE TIME
+    SDL_Rect rectSTL = {288, 480, 416, 128};
+    SDL_Texture *backgroundBlurTextureSTL = loadImage("image/effect/Blur.png");
+    SDL_RenderCopy(Game::renderer, backgroundBlurTextureSTL, NULL, &rectSTL);
+    SDL_DestroyTexture(backgroundBlurTextureSTL);
 }
 void GameState::drawLines() 
 {
@@ -229,13 +259,13 @@ void GameState::drawScore()
     SDL_Color color = {255, 255, 0};
     SDL_Surface *surface = TTF_RenderText_Solid(font, SCORE.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
-    SDL_Rect textRect = {(cols + 3) * 32, (rows - 1) * 32, surface->w, surface->h};
+    SDL_Rect textRect = {(cols + 3) * 32, (rows + (-1)) * 32, surface->w, surface->h};
     // DISPLAY SCORE
     string SCORE_update = to_string(score);
     SDL_Color color_update = {255, 255, 255};
     SDL_Surface *surface_update = TTF_RenderText_Solid(font_update, SCORE_update.c_str(), color_update);
     SDL_Texture *texture_update = SDL_CreateTextureFromSurface(Game::renderer, surface_update);
-    SDL_Rect textRect_update = {(cols + 3) * 32, (rows + 1) * 32, surface_update->w, surface_update->h};
+    SDL_Rect textRect_update = {(cols + 3) * 32, (rows + (+1)) * 32, surface_update->w, surface_update->h};
 
     SDL_RenderCopy(Game::renderer, texture, nullptr, &textRect);
     SDL_RenderCopy(Game::renderer, texture_update, nullptr, &textRect_update);
@@ -328,6 +358,7 @@ void GameState::updateBlock()
             nextBlock.pop();
             nextBlock.push(createBlock());
         }
+        updateMode();
     }
 }
 void GameState::drawBlock()
@@ -365,7 +396,7 @@ void GameState::drawNextBlocks()
     int xOffset = cols + 3 ;
     int yOffset = 6;
 
-    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 24);
+    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 22);
     if (font == nullptr)
     {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -373,13 +404,13 @@ void GameState::drawNextBlocks()
         return;
     }
 
-    SDL_Color color = {255, 255, 0};
+    SDL_Color color = {0, 0, 0};
 
     // Display "NEXT BLOCKS"
     string nextBlocksTitle = "NEXT";
     SDL_Surface *surfaceTitle = TTF_RenderText_Solid(font, nextBlocksTitle.c_str(), color);
     SDL_Texture *textureTitle = SDL_CreateTextureFromSurface(Game::renderer, surfaceTitle);
-    SDL_Rect textRectTitle = {xOffset * blockWidth, yOffset * blockWidth, surfaceTitle->w, surfaceTitle->h};
+    SDL_Rect textRectTitle = {xOffset * blockWidth, yOffset * blockWidth - 8, surfaceTitle->w, surfaceTitle->h};
 
     SDL_RenderCopy(Game::renderer, textureTitle, nullptr, &textRectTitle);
     SDL_DestroyTexture(textureTitle);
@@ -401,10 +432,10 @@ void GameState::drawNextBlocks()
                 {   
                     SDL_Rect rect;
                     if (dynamic_cast<Block_O *>(nextBlock) != nullptr)
-                        rect = {(xOffset + 1 + j) * blockWidth, (yOffset + 2 + i) * blockHeight, blockWidth, blockHeight};
+                        rect = {(xOffset + 1 + j) * blockWidth + 16, (yOffset + 2 + i) * blockHeight - 16, blockWidth, blockHeight};
                     else if (dynamic_cast<Block_I *>(nextBlock) != nullptr)
-                        rect = {(xOffset + 1 + j) * blockWidth, (yOffset + i) * blockHeight, blockWidth, blockHeight};
-                    else rect = {(xOffset + 1 + j) * blockWidth, (yOffset + 1 + i) * blockHeight, blockWidth, blockHeight};
+                        rect = {(xOffset + 1 + j) * blockWidth - 16, (yOffset + i) * blockHeight, blockWidth, blockHeight};
+                    else rect = {(xOffset + 1 + j) * blockWidth, (yOffset + 1 + i) * blockHeight - 16, blockWidth, blockHeight};
                     SDL_RenderCopy(Game::renderer, nextBlock->getImg(), nullptr, &rect);
                 }
             }
@@ -424,7 +455,7 @@ void GameState::drawHold(){
     int xOffset = cols + 3 ;
     int yOffset = 1;
 
-    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 24);
+    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 22);
     if (font == nullptr)
     {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -432,13 +463,13 @@ void GameState::drawHold(){
         return;
     }
 
-    SDL_Color color = {255, 255, 0};
+    SDL_Color color = {0, 0, 0};
 
     // Display "NEXT BLOCKS"
     string nextBlocksTitle = "HOLD";
     SDL_Surface *surfaceTitle = TTF_RenderText_Solid(font, nextBlocksTitle.c_str(), color);
     SDL_Texture *textureTitle = SDL_CreateTextureFromSurface(Game::renderer, surfaceTitle);
-    SDL_Rect textRectTitle = {xOffset * blockWidth, yOffset * blockWidth, surfaceTitle->w, surfaceTitle->h};
+    SDL_Rect textRectTitle = {xOffset * blockWidth, yOffset * blockWidth - 8, surfaceTitle->w, surfaceTitle->h};
 
     SDL_RenderCopy(Game::renderer, textureTitle, nullptr, &textRectTitle);
     SDL_DestroyTexture(textureTitle);
@@ -467,10 +498,10 @@ void GameState::drawHoldBlock(){
             {   
                 SDL_Rect rect;
                 if (dynamic_cast<Block_O *>(holdBlock) != nullptr)
-                    rect = {(xOffset + 1 + j) * blockWidth, (yOffset + 2 + i) * blockHeight, blockWidth, blockHeight};
+                    rect = {(xOffset + 1 + j) * blockWidth + 16, (yOffset + 2 + i) * blockHeight - 16, blockWidth, blockHeight};
                 else if (dynamic_cast<Block_I *>(holdBlock) != nullptr)
-                    rect = {(xOffset + 1 + j) * blockWidth, (yOffset + i) * blockHeight, blockWidth, blockHeight};
-                else rect = {(xOffset + 1 + j) * blockWidth, (yOffset + 1 + i) * blockHeight, blockWidth, blockHeight};
+                    rect = {(xOffset + 1 + j) * blockWidth - 16, (yOffset + i) * blockHeight - 16, blockWidth, blockHeight};
+                else rect = {(xOffset + 1 + j) * blockWidth, (yOffset + i) * blockHeight, blockWidth, blockHeight};
                 SDL_RenderCopy(Game::renderer, holdBlock->getImg(), nullptr, &rect);
             }
         }
@@ -539,4 +570,23 @@ GameState::~GameState()
 {
     delete currentBlock;
     delete holdBlock;
+}
+void GameState::updateMode() 
+{
+    if (gameMode == 1) 
+    {
+        int elapsedSeconds = currentTime / 1000.0;
+        elapsedSeconds = elapsedSeconds % 60;
+        if ((elapsedSeconds % 10 == 0) && (speed > 0.15)) 
+        {
+            speed = speed - speedMultiplier * elapsedSeconds / 1000;
+        }
+    }
+    if (gameMode == 2) 
+    {
+        if (score >= 10) 
+        {
+            Game::isRunning = false;
+        }
+    }
 }

@@ -14,13 +14,13 @@ class GameState {
     static int currentTime;
     static long long score;
     static int clearedLines;
-    static int combo;
     static bool checkHold;
     double speed;
+    double speedMultiplier;
     Block* currentBlock;
     Block* holdBlock;
     queue<Block*> nextBlock;
-    int lineCount;
+    int gameMode;
 public:
     GameState();
     ~GameState();
@@ -30,19 +30,21 @@ public:
     Point getCollapsablePoint();
     void updateGameState();
     void updateBlock();
-    void updateScore(int line);
     void clearLines();
+    void updateMode();
+    void updateScore(int line);
     //draw
     void drawGameState();
     void drawGameBorder();
     void drawTime();
     void drawBlock();
     void drawShadowBlock();
-    void drawLines();
     void drawScore();
+    void drawLines();
     void drawNextBlocks();
     void drawHold();
     void drawHoldBlock();
+    void drawBlurBackground();
     //get
     Block* getCurrentBlock();
     Block* getHoldBlock();

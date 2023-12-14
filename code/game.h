@@ -22,6 +22,7 @@
 #include "gameState.h"
 #include "menu/MainMenu.h"
 #include "menu/PauseMenu.h"
+#include "BackgroundManager.h"
 
 using namespace std;
 
@@ -39,7 +40,7 @@ public:
     static bool on;  // menu
     static SDL_Renderer* renderer;
     static SDL_Event event;
-    
+    static SDL_Texture* backgroundTexture;  
     
     Game(const char* title = "", int xPos = 0, int yPos = 0, int width = 0, int height = 0, bool fullscreen = false);
     ~Game();

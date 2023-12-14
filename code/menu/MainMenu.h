@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../game.h"
 #include "../Audio.h"
+#include "../BackgroundManager.h"
 #include "TextBox.h"
 #include "AboutMenu.h"
 #include <string>
@@ -16,6 +17,7 @@ private:
 	static const int n = 5;
 	textBox textBoxes[n];
     string musicPaths[n];
+	SDL_Texture* mainMenuTexture;
 public:
 	static bool isMuted;
 	static Audio audioMainMenu;

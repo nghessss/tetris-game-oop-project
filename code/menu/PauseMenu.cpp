@@ -5,6 +5,10 @@ Audio PauseMenu::audioPauseMenu;
 
 PauseMenu::PauseMenu()
 {
+	const char* imagePath = BackgroundManager::GetCurrentBackground();
+	SDL_Surface* pauseMenuSurface = IMG_Load(imagePath);
+	pauseMenuTexture = SDL_CreateTextureFromSurface(Game::renderer, pauseMenuSurface);
+	SDL_FreeSurface(pauseMenuSurface);
 	for (int i = 0; i < n; i++)
 	{
 		textBoxes[i].setX(screen_width / 2);
@@ -16,6 +20,7 @@ PauseMenu::PauseMenu()
 };
 PauseMenu::~PauseMenu(){
 	audioPauseMenu.stopBackgroundMusic();
+	SDL_DestroyTexture(pauseMenuTexture);
 };
 
 void PauseMenu::HandleEvent()
@@ -44,6 +49,7 @@ void PauseMenu::HandleEvent()
 			if (pos == 0)
 			{ 
 				on = false;
+				audioPauseMenu.stopBackgroundMusic();
 				Game::on = true;
 			}
 			if (pos == 1)
@@ -87,7 +93,7 @@ void PauseMenu::Render()
 {
 	SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
 	SDL_RenderClear(Game::renderer);
-
+	SDL_RenderCopy(Game::renderer, pauseMenuTexture, NULL, NULL);
 	SDL_Color White{255, 255, 255};
 	for (int i = 0; i < n; i++)
 	{

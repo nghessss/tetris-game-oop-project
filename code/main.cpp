@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
     PauseMenu *pauseM = new PauseMenu;
     AboutMenu *aboutM = new AboutMenu;
     Game::isRunning = true;
-
     const int targetFPS = 60;
     const chrono::duration<double, milli> frameDuration(1000.0 / targetFPS);
 
