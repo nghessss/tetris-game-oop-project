@@ -4,7 +4,7 @@
 #define screen_height 800
 #define screen_width 600
 #define cols  10
-#define rows  20
+#define rows  22
 #define blockWidth  32
 #define blockHeight 32
 #define key_delay_constant 5

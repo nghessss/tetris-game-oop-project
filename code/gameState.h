@@ -12,7 +12,9 @@ class GameState {
     SDL_Texture *currentGameState[rows+2][cols+2];
     static int timeStart;
     static int currentTime;
-    static int score;
+    static long long score;
+    static int clearedLines;
+    static int combo;
     static bool checkHold;
     double speed;
     Block* currentBlock;
@@ -28,6 +30,7 @@ public:
     Point getCollapsablePoint();
     void updateGameState();
     void updateBlock();
+    void updateScore(int line);
     void clearLines();
     //draw
     void drawGameState();
@@ -35,6 +38,7 @@ public:
     void drawTime();
     void drawBlock();
     void drawShadowBlock();
+    void drawLines();
     void drawScore();
     void drawNextBlocks();
     void drawHold();

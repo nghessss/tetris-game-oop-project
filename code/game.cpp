@@ -202,6 +202,7 @@ void Game::Renderer()
     gameState->drawGameState();
 
     gameState->drawTime();
+    gameState->drawLines();
     gameState->drawScore();
     gameState->drawShadowBlock();
     gameState->drawBlock();
