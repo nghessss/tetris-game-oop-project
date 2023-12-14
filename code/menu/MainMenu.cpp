@@ -6,6 +6,10 @@ Audio MainMenu::audioMainMenu;
 
 MainMenu::MainMenu()
 {
+	const char* imagePath = BackgroundManager::GetCurrentBackground();
+	SDL_Surface* mainMenuSurface = IMG_Load(imagePath);
+	mainMenuTexture = SDL_CreateTextureFromSurface(Game::renderer, mainMenuSurface);
+	SDL_FreeSurface(mainMenuSurface);
 	for (int i = 0; i < n - 1; i++)
 	{
 		textBoxes[i];
@@ -28,9 +32,10 @@ MainMenu::MainMenu()
 	musicPaths[3] = "";
 	musicPaths[4] = "";
 }
-
-MainMenu::~MainMenu() {}
-
+MainMenu::~MainMenu() {
+	audioMainMenu.stopBackgroundMusic();
+	SDL_DestroyTexture(mainMenuTexture);
+}
 void MainMenu::HandleEvent()
 {
 	SDL_Event event;
@@ -57,7 +62,7 @@ void MainMenu::HandleEvent()
 			{
 				cout << "GAME START" << endl;
 				audioMainMenu.stopBackgroundMusic();
-				// audioMainMenu.playBackgroundMusic(musicPaths[0].c_str());
+				SDL_RenderClear(Game::renderer);
 				on = false;
 				Game::on = true;
 			}
@@ -104,7 +109,6 @@ void MainMenu::HandleEvent()
 		break;
 	}
 }
-
 void MainMenu::Update()
 { // animate the option selected (change the size)
 	for (int i = 0; i < n; i++)
@@ -125,12 +129,11 @@ void MainMenu::Update()
 		textBoxes[pos].setColor(255, 255, 0); // put yellow for the one selected
 	}
 }
-
-
 void MainMenu::Render()
 {
 	SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
 	SDL_RenderClear(Game::renderer);
+	SDL_RenderCopy(Game::renderer, mainMenuTexture, NULL, NULL);
 
 	SDL_Color White = {255, 255, 255};
 	for (int i = 0; i < n - 1; i++)

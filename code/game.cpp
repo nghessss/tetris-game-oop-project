@@ -4,6 +4,7 @@ SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
 bool Game::isRunning = false;
 bool Game::on = false;
+SDL_Texture *Game::backgroundTexture;
 
 Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullscreen)
 {
@@ -29,6 +30,12 @@ Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fu
 
         isRunning = true;
         gameState = new GameState();
+        // Init and Create Background Texture
+        BackgroundManager::InitBackground();
+        const char* currentBackground = BackgroundManager::GetCurrentBackground();
+        SDL_Surface* backgroundSurface = IMG_Load(currentBackground);
+        backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+        SDL_FreeSurface(backgroundSurface);
     }
     else
     {
@@ -61,6 +68,7 @@ void Game::HandleEvent()
             break;
     }
 
+    static int shiftKeyDelay = 0;
     static int leftKeyDelay = 0;
     static int downKeyDelay = 0;
     static int rightKeyDelay = 0;
@@ -173,6 +181,16 @@ void Game::HandleEvent()
             }
         }
     }
+    if(key_states[SDL_SCANCODE_LSHIFT] || key_states[SDL_SCANCODE_RSHIFT])
+    {
+        shiftKeyDelay++;
+        cout << "Shift ";
+        if (shiftKeyDelay == key_delay_constant)
+        {
+            gameState->holdCurrentBlock();
+            shiftKeyDelay = 0;
+        }
+    }
 }
 void updateTime()
 {
@@ -186,7 +204,10 @@ void Game::Update()
 void Game::Renderer()
 {
     SDL_RenderClear(renderer);
+    // Render Background
+    SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
     // This is where we would add stuff to render
+    gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
     gameState->drawTime();
@@ -194,6 +215,9 @@ void Game::Renderer()
     gameState->drawShadowBlock();
     gameState->drawBlock();
     gameState->drawNextBlocks();
+    gameState->drawHold();
+    if(gameState->getHoldBlock() != NULL)
+        gameState->drawHoldBlock();
     SDL_RenderPresent(renderer);
 }
 void Game::Clean()
@@ -202,6 +226,7 @@ void Game::Clean()
     audioManager.stopBackgroundMusic();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(backgroundTexture);
     SDL_Quit();
     TTF_Quit();
     cout << "Game Cleaned" << endl;
