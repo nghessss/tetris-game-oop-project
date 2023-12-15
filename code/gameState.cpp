@@ -93,7 +93,7 @@ void GameState::drawGameBorder()
         currentGameState[rows + 1][i] = borderBlock;
         
 
-    for (int i = 3; i <= rows + 1; ++i)
+    for (int i = 0; i <= rows + 1; ++i)
     {
         currentGameState[i][0] = borderBlock;
         currentGameState[i][cols + 1] = borderBlock;
@@ -531,12 +531,12 @@ void GameState::clearLines()
         }
 
         // Shift rows down efficiently
-        for (int k = 1; k <= cols; ++k)
-        {
-            SDL_RenderCopy(Game::renderer, currentGameState[i][k], NULL, NULL);
-            SDL_Rect rect = {k * blockWidth, i * blockHeight, blockWidth, blockHeight};
-            SDL_RenderCopy(Game::renderer, currentGameState[i][k], nullptr, &rect);
-        }
+        // for (int k = 1; k <= cols; ++k)
+        // {
+        //     SDL_RenderCopy(Game::renderer, currentGameState[i][k], NULL, NULL);
+        //     SDL_Rect rect = {k * blockWidth, i * blockHeight, blockWidth, blockHeight};
+        //     SDL_RenderCopy(Game::renderer, currentGameState[i][k], nullptr, &rect);
+        // }
         SDL_RenderPresent(Game::renderer);
         SDL_Delay(200);
         for (int k = i; k > 1; --k)
