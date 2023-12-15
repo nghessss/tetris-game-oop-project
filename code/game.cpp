@@ -195,12 +195,17 @@ void Game::HandleEvent()
 }
 void updateTime()
 {
+    GameState::currentTime = SDL_GetTicks() - GameState::timeStart;
 }
 void Game::Update()
 {
-    updateTime();
-    gameState->updateBlock();
-    gameState->clearLines();
+    if (GameState::gameOver == false)
+    {
+        updateTime();
+        gameState->updateBlock();
+        gameState->clearLines();
+        gameState->checkGameOver();    
+    }
 }
 void Game::Renderer()
 {
@@ -208,18 +213,21 @@ void Game::Renderer()
     // Render Background
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
     // This is where we would add stuff to render
+    
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
-    gameState->drawShadowBlock();
     gameState->drawBlock();
-    gameState->drawNextBlocks();
     gameState->drawHold();
     gameState->drawTime();
     gameState->drawLines();
     gameState->drawScore();
-    if(gameState->getHoldBlock() != NULL)
-        gameState->drawHoldBlock();
+    if (GameState::gameOver == false){
+        if(gameState->getHoldBlock() != NULL)
+            gameState->drawHoldBlock();
+        gameState->drawShadowBlock();
+        gameState->drawNextBlocks();
+    }
     SDL_RenderPresent(renderer);
 }
 void Game::Clean()

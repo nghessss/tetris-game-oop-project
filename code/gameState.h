@@ -12,8 +12,7 @@ class Block;
 class Point;
 class GameState {
     SDL_Texture *currentGameState[rows+2][cols+2];
-    static int timeStart;
-    static int currentTime;
+    
     static int score;
     static int clearedLines;
     static bool checkHold;
@@ -24,9 +23,13 @@ class GameState {
     queue<Block*> nextBlock;
     int gameMode;
 public:
+    static int timeStart;
+    static int currentTime;
+    static bool gameOver;
     GameState();
     ~GameState();
     //update
+    void checkGameOver();
     bool checkCollapse(Block *block,Point point);
     bool checkCanChangeDirect(Block *block);
     Point getCollapsablePoint();
@@ -35,6 +38,7 @@ public:
     void clearLines();
     void updateMode();
     void updateScore(int line);
+    void freeTheBoard();
     //draw
     
     void drawGameState();
