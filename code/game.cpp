@@ -198,7 +198,7 @@ void Game::HandleEvent()
         controlKeyDelay++;
         if (controlKeyDelay == key_delay_constant)
         {
-            if(gameState->boomCount-- >= 0)
+            if(gameState->boomCount-- > 0)
                 gameState->setCurrentBlock(gameState->getBoomBlock());
             controlKeyDelay = 0;
         }
@@ -234,6 +234,7 @@ void Game::Renderer()
     gameState->drawTime();
     gameState->drawLines();
     gameState->drawScore();
+    gameState->drawBoomBlockLeft();
     if (GameState::gameOver == false){
         if(gameState->getHoldBlock() != NULL)
             gameState->drawHoldBlock();

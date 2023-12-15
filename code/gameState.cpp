@@ -58,7 +58,7 @@ GameState::GameState()
     }
     holdBlock = NULL;
     currentBlock = createBlock();
-    speed = 0.5;
+    speed = 0.2;
     speedMultiplier = 0.05;
     gameMode = 1;
     boomBlock = new Block_Boom();
@@ -142,7 +142,7 @@ TTF_Font *loadFont(const char *fontPath, int fontSize)
 }
 void GameState::drawTime()
 {
-    
+
     int seconds = currentTime / 1000;
     int minutes = seconds / 60;
     seconds = seconds % 60;
@@ -362,7 +362,7 @@ void GameState::updateBlock()
             for (int j = 0; j < currentBlock->getN(); j++)
             {
                 for (int k = 0; k < currentBlock->getN(); k++)
-                {   
+                {
                     if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1)
                     {
                         currentGameState[currentBlock->getTopLeft().getY() + j][currentBlock->getTopLeft().getX() + k] = currentBlock->getImg();
@@ -370,21 +370,32 @@ void GameState::updateBlock()
                         if (typeid(*currentBlock) == typeid(Block_Boom))
                         {
                             // delete all the block around it
+                            SDL_Texture *tempColor = loadImage("image/explosion.png");
                             for (int i = -1; i <= 1; i++)
                             {
                                 for (int j = -1; j <= 1; j++)
                                 {
-                                    if (currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != NULL 
-                                    && currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != currentGameState[rows + 1][cols + 1]){
+                                    if (currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != NULL && currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != currentGameState[rows + 1][cols + 1])
+                                    {
                                         currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] = NULL;
+                                        SDL_Rect rect = {(currentBlock->getTopLeft().getX() + j) * blockWidth, (currentBlock->getTopLeft().getY() + i) * blockHeight, blockWidth, blockHeight};
+                                        SDL_RenderCopy(Game::renderer, tempColor, nullptr, &rect);
                                     }
                                 }
                             }
+                            for (int i = -1; i <= 1; i++){
+                                for (int ii = k; ii >= 1; ii--){
+                                    currentGameState[currentBlock->getTopLeft().getY() + i][ii] = currentGameState[currentBlock->getTopLeft().getY() + i][ii - 1];
+                                }
+                            }
+                            SDL_RenderPresent(Game::renderer);
+                            SDL_DestroyTexture(tempColor);
+                            SDL_Delay(50);
                         }
-                        
                     }
                 }
             }
+
             Audio hitSound;
             hitSound.playBackgroundMusicEffect("audio/BlockHit.mp3", 128);
             // SDL_Delay(100);
@@ -627,7 +638,9 @@ void GameState::clearLines()
 }
 void GameState::holdCurrentBlock()
 {
-    if (holdBlock == nullptr && typeid(*currentBlock) != typeid(Block_Boom))
+    if (typeid(*currentBlock) == typeid(Block_Boom))
+        return;
+    if (holdBlock == nullptr)
     {
         holdBlock = currentBlock;
         holdBlock->setTopLeft(Point(5, 0));
@@ -638,7 +651,7 @@ void GameState::holdCurrentBlock()
         nextBlock.push(createBlock());
         checkHold = false;
     }
-    else if (typeid(*holdBlock) != typeid(*currentBlock) && checkHold && typeid(*currentBlock) != typeid(Block_Boom))
+    else if (typeid(*holdBlock) != typeid(*currentBlock) && checkHold)
     {
         Block *temp = currentBlock;
         currentBlock = holdBlock;
@@ -674,9 +687,11 @@ void GameState::updateMode()
         }
     }
 }
-void GameState::freeTheBoard(){
+void GameState::freeTheBoard()
+{
     for (int i = 1; i <= rows; ++i)
-        for (int j = 1; j <= cols; j++){
+        for (int j = 1; j <= cols; j++)
+        {
             if (currentGameState[i][j] != NULL)
                 currentGameState[i][j] = loadImage("image/ice.png");
         }
@@ -694,29 +709,44 @@ void GameState::checkGameOver()
             return;
         }
 }
-void GameState::loadBestScore(){
+void GameState::loadBestScore()
+{
     ifstream file;
     file.open("bestScore.txt");
-    if (file.is_open()) {
+    if (file.is_open())
+    {
         file >> bestScore;
     }
     file.close();
 }
-void GameState::saveBestScore(){
+void GameState::saveBestScore()
+{
     ofstream file;
     file.open("bestScore.txt");
-    if (file.is_open()) {
+    if (file.is_open())
+    {
         file << bestScore;
     }
     file.close();
 }
-void GameState::updateBestScore() 
+void GameState::updateBestScore()
 {
-    if (score > bestScore) 
+    if (score > bestScore)
     {
         bestScore = score;
     }
 }
-void GameState::setCurrentBlock(Block* block){
+void GameState::setCurrentBlock(Block *block)
+{
     currentBlock = block;
+}
+void GameState::drawBoomBlockLeft()
+{
+    for(int i = 0; i < boomCount; i ++)
+    {
+        SDL_Texture *boomBlockLeft = loadImage("image/boom.png");
+        SDL_Rect rect = {(cols + 3 + i) * 32, (rows + (-6)) * 32 - 16, 32, 32};
+        SDL_RenderCopy(Game::renderer, boomBlockLeft, nullptr, &rect);
+        SDL_DestroyTexture(boomBlockLeft);
+    }
 }

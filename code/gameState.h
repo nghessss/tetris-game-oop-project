@@ -60,6 +60,7 @@ public:
     void drawHold();
     void drawHoldBlock();
     void drawBlurBackground();
+    void drawBoomBlockLeft();
     //get
     Block* getCurrentBlock();
     Block* getHoldBlock();
