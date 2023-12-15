@@ -14,7 +14,7 @@ Audio::~Audio() {
     Mix_CloseAudio();
 }
 
-void Audio::playBackgroundMusic(const char *filePath) {
+void Audio::playBackgroundMusic(const char *filePath, int volume) {
     stopBackgroundMusic(); // Stop previous music if playing
 
     backgroundMusic = Mix_LoadMUS(filePath);
@@ -22,6 +22,7 @@ void Audio::playBackgroundMusic(const char *filePath) {
         cerr << "Failed to load music: " << Mix_GetError() << endl;
         return;
     }
+    Mix_VolumeMusic(volume); // Example: Set volume to 50%
 
     if (Mix_PlayMusic(backgroundMusic, -1) == -1) {
         cerr << "Failed to play music: " << Mix_GetError() << endl;
@@ -30,32 +31,17 @@ void Audio::playBackgroundMusic(const char *filePath) {
     }
 }
 
-void Audio::playBackgroundMusicAsync(const char *filePath) {
-    stopBackgroundMusic(); // Stop previous music if playing
-
-    backgroundMusic = Mix_LoadMUS(filePath);
-    if (!backgroundMusic) {
-        cerr << "Failed to load music: " << Mix_GetError() << endl;
+void Audio::playBackgroundMusicEffect(const char *filePath, int volume) {
+    effectMusic = Mix_LoadWAV(filePath);
+    if (!effectMusic) {
+        std::cerr << "Failed to load hit sound: " << Mix_GetError() << std::endl;
         return;
     }
-
-    // Asynchronously play music and wait for 500 milliseconds
-    future<void> result = async(launch::async, &Audio::playBackgroundMusicThread, this);
-    result.wait_for(chrono::milliseconds(450));
-
-    // Cleanup after playback
-    stopBackgroundMusic();
-}
-
-void Audio::playBackgroundMusicThread() {
-    if (Mix_PlayMusic(backgroundMusic, 0) == -1) {
-        cerr << "Failed to play music: " << Mix_GetError() << endl;
-        return;
-    }
-
-    // Allow the music to play indefinitely
-    while (Mix_PlayingMusic()) {
-        this_thread::sleep_for(chrono::milliseconds(10));
+    Mix_VolumeChunk(effectMusic, volume); // Adjust the volume of the hit sound as needed
+    if (Mix_PlayChannel(-1, effectMusic, 0) == -1) {
+        std::cerr << "Failed to play hit sound: " << Mix_GetError() << std::endl;
+        Mix_FreeChunk(effectMusic);
+        effectMusic = nullptr;
     }
 }
 

@@ -3,6 +3,8 @@
 #define GAMESTATE_H
 #include <vector>
 #include <queue>
+#include <iomanip>
+#include <sstream>
 #include "game.h"
 #include "Block.h"
 using namespace std;
@@ -13,6 +15,7 @@ class GameState {
     static int timeStart;
     static int currentTime;
     static int score;
+    static int clearedLines;
     static bool checkHold;
     double speed;
     double speedMultiplier;
@@ -31,6 +34,7 @@ public:
     void updateBlock();
     void clearLines();
     void updateMode();
+    void updateScore(int line);
     //draw
     void drawGameState();
     void drawGameBorder();
@@ -38,6 +42,7 @@ public:
     void drawBlock();
     void drawShadowBlock();
     void drawScore();
+    void drawLines();
     void drawNextBlocks();
     void drawHold();
     void drawHoldBlock();

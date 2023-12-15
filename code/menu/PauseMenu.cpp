@@ -50,6 +50,7 @@ void PauseMenu::HandleEvent()
 			{ 
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
+				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", 10);
 				Game::on = true;
 			}
 			if (pos == 1)
@@ -57,7 +58,7 @@ void PauseMenu::HandleEvent()
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
-					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3");
+					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 10);
 				MainMenu::on = true;
 			}
 			if (pos == 2) 

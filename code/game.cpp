@@ -59,7 +59,8 @@ void Game::HandleEvent()
             if (event.key.keysym.sym == SDLK_ESCAPE)
             {
                 std::cout << "PAUSE MENU IS ON" << std::endl;
-                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3");
+                MainMenu::audioMainMenu.stopBackgroundMusic();
+                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 10);
                 on = false;
                 PauseMenu::on = true;
             }
@@ -210,12 +211,13 @@ void Game::Renderer()
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
-    gameState->drawTime();
-    gameState->drawScore();
     gameState->drawShadowBlock();
     gameState->drawBlock();
     gameState->drawNextBlocks();
     gameState->drawHold();
+    gameState->drawTime();
+    gameState->drawLines();
+    gameState->drawScore();
     if(gameState->getHoldBlock() != NULL)
         gameState->drawHoldBlock();
     SDL_RenderPresent(renderer);

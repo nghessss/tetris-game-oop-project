@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <filesystem>
+#include <algorithm>
 using namespace std;
 namespace fs = filesystem;
 
@@ -18,7 +19,6 @@ void BackgroundManager::InitBackground() {
         backgrounds.push_back(temp);
     }
 }
-
 
 const char* BackgroundManager::GetCurrentBackground() {
     if (!backgrounds.empty()) {

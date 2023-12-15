@@ -45,7 +45,7 @@ void AboutMenu::HandleEvent()
             if (pos == 4) {
 				MainMenu::audioMainMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
-					MainMenu::audioMainMenu.playBackgroundMusic("Audio/theme.mp3");
+					MainMenu::audioMainMenu.playBackgroundMusic("Audio/theme.mp3", 10);
 				on = false;
 				MainMenu::on = true;
 			}
