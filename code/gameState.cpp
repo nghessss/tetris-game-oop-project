@@ -291,7 +291,7 @@ void GameState::updateScore(int linesCleared)
     {
         score += 50;
     }
-    else if (linesCleared > 0)
+    else
     {
         score += 80;
     }
