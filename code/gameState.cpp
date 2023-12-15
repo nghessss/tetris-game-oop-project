@@ -12,7 +12,6 @@ int GameState::currentTime = SDL_GetTicks() - timeStart;
 int GameState::score = 0;
 int GameState::clearedLines = 0;
 bool GameState::checkHold = true;
-bool GameState::checkGameOver = false;
 
 Block* createBlock(){
     int random = rand() % 7;
