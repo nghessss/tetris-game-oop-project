@@ -18,20 +18,21 @@ protected:
 public:
     Block();
     Block(const Block& other);
-    ~Block();
+    virtual ~Block();
     static int timePos;
     vector<vector<vector<int>>> getShape();
     SDL_Texture* getImg();
     SDL_Texture* getShadowImg();
     Point getTopLeft();
-
     int getNumRotation();
     int getN();
+    void setNumRotation(int num);
     void setTopLeft(Point p);
     void moveDown();
     void moveLeft();
     void moveRight();
     void changeDirect();
     void space(Point targetPoint);
+    Block& operator=(const Block& other);
 };
 #endif
