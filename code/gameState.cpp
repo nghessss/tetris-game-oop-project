@@ -529,16 +529,15 @@ void GameState::clearLines()
         {
             continue;
         }
-
-        // Shift rows down efficiently
-        // for (int k = 1; k <= cols; ++k)
-        // {
-        //     SDL_RenderCopy(Game::renderer, currentGameState[i][k], NULL, NULL);
-        //     SDL_Rect rect = {k * blockWidth, i * blockHeight, blockWidth, blockHeight};
-        //     SDL_RenderCopy(Game::renderer, currentGameState[i][k], nullptr, &rect);
-        // }
+        SDL_Texture *tempColor = loadImage("image/clear.png");
+        for (int k = 1; k <= cols; ++k)
+        {
+            SDL_Rect rect = {k * blockWidth, i * blockHeight, blockWidth, blockHeight};
+            SDL_RenderCopy(Game::renderer, tempColor, nullptr, &rect);
+        }
         SDL_RenderPresent(Game::renderer);
-        SDL_Delay(200);
+        SDL_DestroyTexture(tempColor);
+        SDL_Delay(50);
         for (int k = i; k > 1; --k)
         {
             copy(currentGameState[k - 1] + 1, currentGameState[k - 1] + cols + 1, currentGameState[k] + 1);
