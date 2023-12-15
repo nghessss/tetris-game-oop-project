@@ -25,8 +25,8 @@ MainMenu::MainMenu()
 	textBoxes[2].setMessage("ABOUT");
 	textBoxes[3].setMessage("QUIT");
 	textBoxes[4].setMessage("MUTED");
-	audioMainMenu.playBackgroundMusic("audio/Theme.mp3");
-	musicPaths[0] = "audio/Theme.mp3";
+	audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 10);
+	musicPaths[0] = "audio/gameTheme.mp3";
 	musicPaths[1] = "audio/Theme.mp3";
 	musicPaths[2] = "audio/About.mp3";
 	musicPaths[3] = "";
@@ -62,6 +62,7 @@ void MainMenu::HandleEvent()
 			{
 				cout << "GAME START" << endl;
 				audioMainMenu.stopBackgroundMusic();
+				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 10);
 				SDL_RenderClear(Game::renderer);
 				on = false;
 				Game::on = true;
@@ -69,7 +70,7 @@ void MainMenu::HandleEvent()
 			if (pos == 1)
 			{
 				cout << "RECORD" << endl;
-				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str());
+				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str(), 10);
 			}
 
 			if (pos == 2)
@@ -77,7 +78,7 @@ void MainMenu::HandleEvent()
 				on = false;
 				AboutMenu::on = true;
 				cout << "ABOUT" << endl;
-				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str());
+				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str(), 10);
 			}
 			if (pos == 3)
 				Game::isRunning = false;
@@ -89,7 +90,7 @@ void MainMenu::HandleEvent()
 					audioMainMenu.stopBackgroundMusic();
 				} else {
 					cout << "PLAY MUSIC" << endl;
-					audioMainMenu.playBackgroundMusic("audio/Theme.mp3");
+					audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 10);
 				}
 				isMuted = !isMuted;
 			}

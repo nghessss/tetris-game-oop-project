@@ -20,7 +20,6 @@ void BackgroundManager::InitBackground() {
     }
 }
 
-
 const char* BackgroundManager::GetCurrentBackground() {
     if (!backgrounds.empty()) {
         int randomIndex = rand() % backgrounds.size();

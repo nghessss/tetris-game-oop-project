@@ -3,6 +3,8 @@
 #define GAMESTATE_H
 #include <vector>
 #include <queue>
+#include <iomanip>
+#include <sstream>
 #include "game.h"
 #include "Block.h"
 using namespace std;
@@ -12,7 +14,7 @@ class GameState {
     SDL_Texture *currentGameState[rows+2][cols+2];
     static int timeStart;
     static int currentTime;
-    static long long score;
+    static int score;
     static int clearedLines;
     static bool checkHold;
     double speed;

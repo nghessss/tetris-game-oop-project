@@ -13,15 +13,14 @@ public:
     Audio();
     ~Audio();
 
-    void playBackgroundMusicAsync(const char *filePath);
-    void playBackgroundMusic(const char *filePath);
+    void playBackgroundMusicEffect(const char *filePath, int volume);
+    void playBackgroundMusic(const char *filePath, int volume);
     void stopBackgroundMusic();
 
 private:
     Mix_Music *backgroundMusic;
+    Mix_Chunk *effectMusic;
     std::unique_ptr<std::thread> playbackThread;
-
-    void playBackgroundMusicThread();
 };
 
 #endif // AUDIO_H
