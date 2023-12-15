@@ -782,14 +782,14 @@ void GameState::updateGameStateAfterBoom(){
                 cout << d[i][j] << " ";
             cout << endl;
         }
-        for (int i = rows; i >= 1; i--)
+        for (int i = rows-1; i >= 1; i--)
             for (int j = 1; j <= cols; j++)
-                if (d[i][j] == 0 && d[i][j-1] != 1){
-                    d[i][j] = d[i][j-1];
-                    currentGameState[i][j] = currentGameState[i-1][j];
-                }else if (d[i][j] != 0 && d[i][j-1] == 0){
-                    d[i][j-1] = d[i][j];
-                    currentGameState[i-1][j] = currentGameState[i][j];
+                if (d[i][j] != 1 && d[i][j] != 0){
+                    d[i+1][j] = d[i][j];
+                    d[i][j] = 0;
+                    currentGameState[i+1][j] = currentGameState[i][j];
+                    currentGameState[i][j] = NULL;
                 }
+                
     }while(color > 2);
 }
