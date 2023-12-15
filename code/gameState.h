@@ -37,7 +37,7 @@ public:
     bool checkCollapse(Block *block,Point point);
     bool checkCanChangeDirect(Block *block);
     Point getCollapsablePoint();
-    void updateGameState();
+    void updateGameStateAfterBoom();
     void updateBlock();
     void clearLines();
     void updateMode();
@@ -68,6 +68,8 @@ public:
     void holdCurrentBlock();
     //set
     void setCurrentBlock(Block* block);
+    // 
+;
 };
 
 #endif

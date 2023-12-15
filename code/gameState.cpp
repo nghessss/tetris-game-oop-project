@@ -15,7 +15,7 @@ int GameState::clearedLines = 0;
 bool GameState::checkHold = true;
 bool GameState::gameOver = false;
 int GameState::bestScore = 0;
-int GameState::boomCount = 3;
+int GameState::boomCount = 100;
 Block *createBlock()
 {
     int random = rand() % 7;
@@ -391,6 +391,7 @@ void GameState::updateBlock()
                             SDL_RenderPresent(Game::renderer);
                             SDL_DestroyTexture(tempColor);
                             SDL_Delay(50);
+                            updateGameStateAfterBoom();
                         }
                     }
                 }
@@ -749,4 +750,46 @@ void GameState::drawBoomBlockLeft()
         SDL_RenderCopy(Game::renderer, boomBlockLeft, nullptr, &rect);
         SDL_DestroyTexture(boomBlockLeft);
     }
+}
+int dx[] = {0,0,1,-1};
+int dy[] = {1,-1,0,0};
+void DFS(int d[][cols+2],int color,int x,int y,SDL_Texture *currentGameState[rows+2][cols+2]){
+    if (x < 1 || x > rows + 1 || y < 1 || y > cols) return;
+    d[x][y] = color;
+    for(int i=0;i<4;i++){
+        int u = x + dx[i];
+        int v = y + dy[i];
+        if(d[u][v] == 0 && (currentGameState[u][v] != NULL || u == rows + 1)){
+            DFS(d,color,u,v,currentGameState);
+        }
+    }
+}
+
+void GameState::updateGameStateAfterBoom(){
+    int color = 1;
+    do{
+        int d[rows+2][cols+2];
+        memset(d,0,sizeof(d));
+        color = 1;
+        for (int i = rows+1; i >= 1; i--)
+            for (int j = 1; j <= cols; j++)
+                if ((i == rows + 1 || currentGameState[i][j] != NULL) && d[i][j] == 0){
+                    DFS(d,color,i,j,currentGameState);
+                    color++;
+                }
+        for (int i = 1; i <= rows + 1; i++){
+            for (int j = 1; j <= cols; j++)
+                cout << d[i][j] << " ";
+            cout << endl;
+        }
+        for (int i = rows; i >= 1; i--)
+            for (int j = 1; j <= cols; j++)
+                if (d[i][j] == 0 && d[i][j-1] != 1){
+                    d[i][j] = d[i][j-1];
+                    currentGameState[i][j] = currentGameState[i-1][j];
+                }else if (d[i][j] != 0 && d[i][j-1] == 0){
+                    d[i][j-1] = d[i][j];
+                    currentGameState[i-1][j] = currentGameState[i][j];
+                }
+    }while(color > 2);
 }
