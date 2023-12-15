@@ -60,7 +60,7 @@ void Game::HandleEvent()
             {
                 std::cout << "PAUSE MENU IS ON" << std::endl;
                 MainMenu::audioMainMenu.stopBackgroundMusic();
-                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 10);
+                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 30);
                 on = false;
                 PauseMenu::on = true;
             }

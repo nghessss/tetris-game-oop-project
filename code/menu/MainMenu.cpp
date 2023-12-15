@@ -25,7 +25,7 @@ MainMenu::MainMenu()
 	textBoxes[2].setMessage("ABOUT");
 	textBoxes[3].setMessage("QUIT");
 	textBoxes[4].setMessage("MUTED");
-	audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 10);
+	audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 30);
 	musicPaths[0] = "audio/gameTheme.mp3";
 	musicPaths[1] = "audio/Theme.mp3";
 	musicPaths[2] = "audio/About.mp3";
@@ -51,9 +51,11 @@ void MainMenu::HandleEvent()
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_UP:
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
 			pos -= 1;
 			break;
 		case SDLK_DOWN:
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
 			pos += 1;
 			break;
 
@@ -61,6 +63,7 @@ void MainMenu::HandleEvent()
 			if (pos == 0)
 			{
 				cout << "GAME START" << endl;
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
 				audioMainMenu.stopBackgroundMusic();
 				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 40);
 				SDL_RenderClear(Game::renderer);
@@ -69,28 +72,33 @@ void MainMenu::HandleEvent()
 			}
 			if (pos == 1)
 			{
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
 				cout << "RECORD" << endl;
 				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str(), 10);
 			}
 
 			if (pos == 2)
 			{
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
 				on = false;
 				AboutMenu::on = true;
 				cout << "ABOUT" << endl;
 				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str(), 10);
 			}
-			if (pos == 3)
+			if (pos == 3) {
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
 				Game::isRunning = false;
+			}
 			if (pos == 4)
 			{
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
 				// isMuted = !isMuted;
 				if (!isMuted) {
 					cout << "STOP MUSIC" << endl;
 					audioMainMenu.stopBackgroundMusic();
 				} else {
 					cout << "PLAY MUSIC" << endl;
-					audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 10);
+					audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 30);
 				}
 				isMuted = !isMuted;
 			}
