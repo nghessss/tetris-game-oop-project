@@ -513,10 +513,12 @@ void GameState::drawHoldBlock(){
 void GameState::clearLines()
 {
     int linesCleared = 0;
-    for (int i = rows; i >= 1; --i)
+
+    // Tạo một vector để lưu trữ các chỉ số của các dòng cần xóa
+    vector<int> linesToClear;
+    for (int i = rows; i >= 1;)
     {
         bool isLineComplete = true;
-
         for (int j = 1; j <= cols; ++j)
         {
             if (currentGameState[i][j] == NULL)
@@ -525,10 +527,17 @@ void GameState::clearLines()
                 break;
             }
         }
-        if (!isLineComplete)
+        if (isLineComplete)
         {
-            continue;
+            linesToClear.push_back(i);
+            ++linesCleared;
         }
+        --i;
+    }
+
+    // Hiệu ứng cho từng dòng được xóa
+    for (int i : linesToClear)
+    {
         SDL_Texture *tempColor = loadImage("image/clear.png");
         for (int k = 1; k <= cols; ++k)
         {
@@ -538,21 +547,24 @@ void GameState::clearLines()
         SDL_RenderPresent(Game::renderer);
         SDL_DestroyTexture(tempColor);
         SDL_Delay(50);
+
+        // Di chuyển các dòng phía trên xuống
         for (int k = i; k > 1; --k)
         {
             copy(currentGameState[k - 1] + 1, currentGameState[k - 1] + cols + 1, currentGameState[k] + 1);
         }
-        Audio clearLineAudio;
-        clearLineAudio.playBackgroundMusicEffect("audio/ClearLine.mp3", 128);
+
         // Set cleared line to NULL using memset
         memset(currentGameState[1] + 1, 0, cols * sizeof(Block*));
 
-        ++i;
-        ++linesCleared;
+        Audio clearLineAudio;
+        clearLineAudio.playBackgroundMusicEffect("audio/ClearLine.mp3", 128);
     }
+
     clearedLines += linesCleared;
     // updateScore(linesCleared);
 }
+
 void GameState::holdCurrentBlock() {
     if (holdBlock == nullptr) {
         holdBlock = currentBlock;
