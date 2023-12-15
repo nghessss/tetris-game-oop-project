@@ -75,6 +75,7 @@ void Game::HandleEvent()
     static int rightKeyDelay = 0;
     static int downLeftKeyDelay = 0;
     static int downRightKeyDelay = 0;
+    static int controlKeyDelay = 0;
     static bool upKeyReleased = true;
     static bool isFallingFromSpace = false;
 
@@ -192,6 +193,16 @@ void Game::HandleEvent()
             shiftKeyDelay = 0;
         }
     }
+    if (key_states[SDL_SCANCODE_LCTRL] || key_states[SDL_SCANCODE_RCTRL])
+    {
+        controlKeyDelay++;
+        if (controlKeyDelay == key_delay_constant)
+        {
+            if(gameState->boomCount-- >= 0)
+                gameState->setCurrentBlock(gameState->getBoomBlock());
+            controlKeyDelay = 0;
+        }
+    }
 }
 void updateTime()
 {
@@ -219,6 +230,7 @@ void Game::Renderer()
     gameState->drawGameState();
     gameState->drawBlock();
     gameState->drawHold();
+    gameState->drawNext();
     gameState->drawTime();
     gameState->drawLines();
     gameState->drawScore();

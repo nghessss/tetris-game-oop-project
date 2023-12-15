@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <iomanip>
+#include <fstream>
 #include <sstream>
 #include "game.h"
 #include "Block.h"
@@ -16,13 +17,16 @@ class GameState {
     static int score;
     static int clearedLines;
     static bool checkHold;
+    static int bestScore;
     double speed;
     double speedMultiplier;
     Block* currentBlock;
     Block* holdBlock;
+    Block* boomBlock;
     queue<Block*> nextBlock;
     int gameMode;
 public:
+    static int boomCount;
     static int timeStart;
     static int currentTime;
     static bool gameOver;
@@ -39,6 +43,9 @@ public:
     void updateMode();
     void updateScore(int line);
     void freeTheBoard();
+    void updateBestScore();
+    void loadBestScore();
+    void saveBestScore();
     //draw
     
     void drawGameState();
@@ -48,6 +55,7 @@ public:
     void drawShadowBlock();
     void drawScore();
     void drawLines();
+    void drawNext();
     void drawNextBlocks();
     void drawHold();
     void drawHoldBlock();
@@ -55,8 +63,10 @@ public:
     //get
     Block* getCurrentBlock();
     Block* getHoldBlock();
-    
+    Block* getBoomBlock();
     void holdCurrentBlock();
+    //set
+    void setCurrentBlock(Block* block);
 };
 
 #endif

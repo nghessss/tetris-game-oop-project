@@ -7,12 +7,15 @@
 #include "Block_Z.h"
 #include "Block_S.h"
 #include "Block_J.h"
+#include "Block_boom.h"
 int GameState::timeStart = SDL_GetTicks();
 int GameState::currentTime = SDL_GetTicks() - timeStart;
 int GameState::score = 0;
 int GameState::clearedLines = 0;
 bool GameState::checkHold = true;
 bool GameState::gameOver = false;
+int GameState::bestScore = 0;
+int GameState::boomCount = 3;
 Block *createBlock()
 {
     int random = rand() % 7;
@@ -58,6 +61,8 @@ GameState::GameState()
     speed = 0.5;
     speedMultiplier = 0.05;
     gameMode = 1;
+    boomBlock = new Block_Boom();
+    loadBestScore();
 }
 Block *GameState::getCurrentBlock()
 {
@@ -66,6 +71,10 @@ Block *GameState::getCurrentBlock()
 Block *GameState::getHoldBlock()
 {
     return holdBlock;
+}
+Block *GameState::getBoomBlock()
+{
+    return boomBlock;
 }
 SDL_Texture *loadImage(const char *filename)
 {
@@ -353,11 +362,26 @@ void GameState::updateBlock()
             for (int j = 0; j < currentBlock->getN(); j++)
             {
                 for (int k = 0; k < currentBlock->getN(); k++)
-                {
+                {   
                     if (currentBlock->getShape()[currentBlock->getNumRotation()][j][k] == 1)
                     {
                         currentGameState[currentBlock->getTopLeft().getY() + j][currentBlock->getTopLeft().getX() + k] = currentBlock->getImg();
                         checkHold = true;
+                        if (typeid(*currentBlock) == typeid(Block_Boom))
+                        {
+                            // delete all the block around it
+                            for (int i = -1; i <= 1; i++)
+                            {
+                                for (int j = -1; j <= 1; j++)
+                                {
+                                    if (currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != NULL 
+                                    && currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] != currentGameState[rows + 1][cols + 1]){
+                                        currentGameState[currentBlock->getTopLeft().getY() + i][currentBlock->getTopLeft().getX() + j] = NULL;
+                                    }
+                                }
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -377,7 +401,7 @@ void GameState::updateBlock()
 void GameState::drawBlock()
 {
     Point point = currentBlock->getTopLeft();
-    if (point.getY() <= 1)
+    if (point.getY() == 0)
         return;
     for (int j = 0; j < currentBlock->getN(); j++)
     {
@@ -408,7 +432,7 @@ void GameState::drawShadowBlock()
         }
     }
 }
-void GameState::drawNextBlocks()
+void GameState::drawNext()
 {
     int xOffset = cols + 3;
     int yOffset = 6;
@@ -432,6 +456,23 @@ void GameState::drawNextBlocks()
     SDL_RenderCopy(Game::renderer, textureTitle, nullptr, &textRectTitle);
     SDL_DestroyTexture(textureTitle);
     SDL_FreeSurface(surfaceTitle);
+
+    TTF_CloseFont(font);
+}
+void GameState::drawNextBlocks()
+{
+    int xOffset = cols + 3;
+    int yOffset = 6;
+
+    TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 22);
+    if (font == nullptr)
+    {
+        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+        SDL_Delay(10000);
+        return;
+    }
+
+    SDL_Color color = {0, 0, 0};
 
     // Display the next blocks
     int blockSpacing = 0;
@@ -586,7 +627,7 @@ void GameState::clearLines()
 }
 void GameState::holdCurrentBlock()
 {
-    if (holdBlock == nullptr)
+    if (holdBlock == nullptr && typeid(*currentBlock) != typeid(Block_Boom))
     {
         holdBlock = currentBlock;
         holdBlock->setTopLeft(Point(5, 0));
@@ -597,7 +638,7 @@ void GameState::holdCurrentBlock()
         nextBlock.push(createBlock());
         checkHold = false;
     }
-    else if (typeid(*holdBlock) != typeid(*currentBlock) && checkHold)
+    else if (typeid(*holdBlock) != typeid(*currentBlock) && checkHold && typeid(*currentBlock) != typeid(Block_Boom))
     {
         Block *temp = currentBlock;
         currentBlock = holdBlock;
@@ -648,6 +689,34 @@ void GameState::checkGameOver()
             gameOver = true;
             cout << "GAME OVER" << endl;
             freeTheBoard();
+            updateBestScore();
+            saveBestScore();
             return;
         }
+}
+void GameState::loadBestScore(){
+    ifstream file;
+    file.open("bestScore.txt");
+    if (file.is_open()) {
+        file >> bestScore;
+    }
+    file.close();
+}
+void GameState::saveBestScore(){
+    ofstream file;
+    file.open("bestScore.txt");
+    if (file.is_open()) {
+        file << bestScore;
+    }
+    file.close();
+}
+void GameState::updateBestScore() 
+{
+    if (score > bestScore) 
+    {
+        bestScore = score;
+    }
+}
+void GameState::setCurrentBlock(Block* block){
+    currentBlock = block;
 }
