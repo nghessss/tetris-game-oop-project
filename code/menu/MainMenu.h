@@ -8,8 +8,8 @@
 #include "TextBox.h"
 #include "AboutMenu.h"
 #include <string>
-#define VOLUME_BLKMOVE 60
-#define VOLUME_BLKPICK 60
+#define VOLUME_BLKMOVE 50
+#define VOLUME_BLKPICK 70
 using namespace std;
 
 class MainMenu
