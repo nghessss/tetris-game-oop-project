@@ -62,7 +62,7 @@ void MainMenu::HandleEvent()
 			{
 				cout << "GAME START" << endl;
 				audioMainMenu.stopBackgroundMusic();
-				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 10);
+				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 40);
 				SDL_RenderClear(Game::renderer);
 				on = false;
 				Game::on = true;
