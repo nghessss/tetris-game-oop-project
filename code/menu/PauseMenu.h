@@ -4,6 +4,8 @@
 #include "../game.h"
 #include "../Audio.h"
 #include "TextBox.h"
+#define VOLUME_BLKMOVE 60
+#define VOLUME_BLKPICK 60
 
 class PauseMenu
 {

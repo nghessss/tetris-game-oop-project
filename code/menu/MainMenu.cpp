@@ -51,11 +51,11 @@ void MainMenu::HandleEvent()
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_UP:
-			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
 			pos -= 1;
 			break;
 		case SDLK_DOWN:
-			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
 			pos += 1;
 			break;
 
@@ -63,7 +63,7 @@ void MainMenu::HandleEvent()
 			if (pos == 0)
 			{
 				cout << "GAME START" << endl;
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				audioMainMenu.stopBackgroundMusic();
 				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 40);
 				SDL_RenderClear(Game::renderer);
@@ -72,26 +72,26 @@ void MainMenu::HandleEvent()
 			}
 			if (pos == 1)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				cout << "RECORD" << endl;
 				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str(), 10);
 			}
 
 			if (pos == 2)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				on = false;
 				AboutMenu::on = true;
 				cout << "ABOUT" << endl;
 				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str(), 10);
 			}
 			if (pos == 3) {
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				Game::isRunning = false;
 			}
 			if (pos == 4)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				// isMuted = !isMuted;
 				if (!isMuted) {
 					cout << "STOP MUSIC" << endl;

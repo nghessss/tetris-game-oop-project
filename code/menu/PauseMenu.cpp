@@ -39,18 +39,18 @@ void PauseMenu::HandleEvent()
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_UP:
-			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
+			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
 			pos -= 1;
 			break;
 		case SDLK_DOWN:
-			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", 128);
+			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
 			pos += 1;
 			break;
 
 		case SDLK_RETURN:
 			if (pos == 0)
 			{ 
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
 				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", 40);
@@ -58,7 +58,7 @@ void PauseMenu::HandleEvent()
 			}
 			if (pos == 1)
 			{
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
@@ -66,7 +66,7 @@ void PauseMenu::HandleEvent()
 				MainMenu::on = true;
 			}
 			if (pos == 2) {
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", 50);
+				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				Game::isRunning = false;
 			}
 			break;
