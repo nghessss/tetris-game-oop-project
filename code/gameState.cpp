@@ -15,7 +15,7 @@ int GameState::clearedLines = 0;
 bool GameState::checkHold = true;
 bool GameState::gameOver = false;
 int GameState::bestScore = 0;
-int GameState::boomCount = 100;
+int GameState::boomCount = 3;
 Block *createBlock()
 {
     int random = rand() % 7;
@@ -589,7 +589,7 @@ void GameState::clearLines()
 
     // Tạo một vector để lưu trữ các chỉ số của các dòng cần xóa
     vector<int> linesToClear;
-    for (int i = rows; i >= 1;)
+    for (int i = 1; i <= rows; ++i)
     {
         bool isLineComplete = true;
         for (int j = 1; j <= cols; ++j)
@@ -605,7 +605,6 @@ void GameState::clearLines()
             linesToClear.push_back(i);
             ++linesCleared;
         }
-        --i;
     }
 
     // Hiệu ứng cho từng dòng được xóa
