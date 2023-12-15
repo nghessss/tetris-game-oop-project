@@ -5,8 +5,8 @@ Audio PauseMenu::audioPauseMenu;
 
 PauseMenu::PauseMenu()
 {
-	const char* imagePath = BackgroundManager::GetCurrentBackground();
-	SDL_Surface* pauseMenuSurface = IMG_Load(imagePath);
+	const char *imagePath = BackgroundManager::GetCurrentBackground();
+	SDL_Surface *pauseMenuSurface = IMG_Load(imagePath);
 	pauseMenuTexture = SDL_CreateTextureFromSurface(Game::renderer, pauseMenuSurface);
 	SDL_FreeSurface(pauseMenuSurface);
 	for (int i = 0; i < n; i++)
@@ -18,7 +18,8 @@ PauseMenu::PauseMenu()
 		textBoxes[2].setMessage("QUIT");
 	}
 };
-PauseMenu::~PauseMenu(){
+PauseMenu::~PauseMenu()
+{
 	audioPauseMenu.stopBackgroundMusic();
 	SDL_DestroyTexture(pauseMenuTexture);
 };
@@ -39,34 +40,36 @@ void PauseMenu::HandleEvent()
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_UP:
-			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
+			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
 			pos -= 1;
 			break;
 		case SDLK_DOWN:
-			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
+			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
 			pos += 1;
 			break;
 
 		case SDLK_RETURN:
+			audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLBP);
 			if (pos == 0)
-			{ 
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
+			{
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
-				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", 40);
+				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", VOLGT);
 				Game::on = true;
 			}
 			if (pos == 1)
 			{
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
+				// delete Game::game;
+				GameState::saveBestScore();
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
-					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 30);
+					MainMenu::audioMainMenu.playBackgroundMusic("audio/Theme.mp3", VOLT);
 				MainMenu::on = true;
 			}
-			if (pos == 2) {
-				audioPauseMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
+			if (pos == 2)
+			{
+				GameState::saveBestScore();
 				Game::isRunning = false;
 			}
 			break;
@@ -101,7 +104,6 @@ void PauseMenu::Render()
 	SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
 	SDL_RenderClear(Game::renderer);
 	SDL_RenderCopy(Game::renderer, pauseMenuTexture, NULL, NULL);
-	SDL_Color White{255, 255, 255};
 	for (int i = 0; i < n; i++)
 	{
 		textBoxes[i].renderText(Game::renderer, "build/8bit.ttf");

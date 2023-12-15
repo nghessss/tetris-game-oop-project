@@ -3,6 +3,7 @@
 bool MainMenu::on = true;
 bool MainMenu::isMuted = false;
 Audio MainMenu::audioMainMenu;
+string MainMenu::playerName = "";
 
 MainMenu::MainMenu()
 {
@@ -27,7 +28,7 @@ MainMenu::MainMenu()
 	textBoxes[4].setMessage("MUTED");
 	audioMainMenu.playBackgroundMusic("audio/Theme.mp3", 30);
 	musicPaths[0] = "audio/gameTheme.mp3";
-	musicPaths[1] = "audio/Theme.mp3";
+	musicPaths[1] = "audio/Record.mp3";
 	musicPaths[2] = "audio/About.mp3";
 	musicPaths[3] = "";
 	musicPaths[4] = "";
@@ -51,47 +52,84 @@ void MainMenu::HandleEvent()
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_UP:
-			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
 			pos -= 1;
 			break;
 		case SDLK_DOWN:
-			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLUME_BLKMOVE);
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
 			pos += 1;
 			break;
 
 		case SDLK_RETURN:
+			audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLBP);
 			if (pos == 0)
 			{
-				cout << "GAME START" << endl;
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
-				audioMainMenu.stopBackgroundMusic();
-				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), 40);
 				SDL_RenderClear(Game::renderer);
+				cout << "INPUT NAME" << endl;
+				GetNameInput();
+				cout << "GAME START" << endl;
+				Game::gameState->Reset();
+				audioMainMenu.stopBackgroundMusic();
+				audioMainMenu.playBackgroundMusic(musicPaths[0].c_str(), VOLGT);
 				on = false;
 				Game::on = true;
+				SDL_RenderClear(Game::renderer);
 			}
 			if (pos == 1)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
+				on = false;
+				RecordMenu::on = true;
+				ifstream file("Record.txt");
+				if (file.is_open())
+				{
+					RecordMenu::players.clear();
+					string line;
+					while (getline(file, line))
+					{
+						istringstream iss(line);
+						string playerName;
+						int score;
+
+						if (iss >> playerName >> score)
+						{
+							RecordMenu::players.push_back(make_pair(playerName, score));
+						}
+					}
+					file.close();
+					sort(RecordMenu::players.begin(), RecordMenu::players.end(), [](const auto &a, const auto &b) {
+						return a.second > b.second;
+					});
+				}
+				int maxPlayers = min(static_cast<int>(RecordMenu::players.size()), 5);
+				for (int i = 0; i <= 4; i++)
+				{
+					if (i < maxPlayers)
+					{
+						string message = RecordMenu::players[i].first + "   " +to_string(RecordMenu::players[i].second);
+						RecordMenu::messages.push_back(message);
+						RecordMenu::textBoxes[i].setMessage(RecordMenu::messages[RecordMenu::messages.size() - 1].c_str());
+					}
+					else
+					{
+						RecordMenu::textBoxes[i].setMessage("--"); // Set an empty message if there's no player for this position
+					}
+				}
+				cout << RecordMenu::players.size() << " ";
 				cout << "RECORD" << endl;
-				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str(), 10);
+				audioMainMenu.playBackgroundMusic(musicPaths[1].c_str(), 30);
 			}
 
 			if (pos == 2)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				on = false;
 				AboutMenu::on = true;
 				cout << "ABOUT" << endl;
-				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str(), 10);
+				audioMainMenu.playBackgroundMusic(musicPaths[2].c_str(), 30);
 			}
-			if (pos == 3) {
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
+			if (pos == 3)
 				Game::isRunning = false;
-			}
 			if (pos == 4)
 			{
-				audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLUME_BLKPICK);
 				// isMuted = !isMuted;
 				if (!isMuted) {
 					cout << "STOP MUSIC" << endl;
@@ -152,3 +190,90 @@ void MainMenu::Render()
 	textBoxes[4].renderText(Game::renderer, textBoxes[4].getX(), textBoxes[4].getY(), "build/8bit.ttf");
 	SDL_RenderPresent(Game::renderer);
 }
+
+void MainMenu::GetNameInput()
+{
+    SDL_StartTextInput();
+    bool inputFinished = false;
+    string playerName = ""; // Default empty name
+    bool showDefaultText = true; // Flag to control showing "ANONYMOUS"
+
+    while (!inputFinished)
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_KEYDOWN)
+            {
+                if (event.key.keysym.sym == SDLK_RETURN)
+                {
+                    inputFinished = true;
+                }
+                else if (event.key.keysym.sym == SDLK_BACKSPACE && !playerName.empty())
+                {
+                    playerName.pop_back();
+                }
+            }
+            else if (event.type == SDL_TEXTINPUT)
+            {
+                playerName += event.text.text;
+                showDefaultText = false; // Once user starts typing, hide the default text
+            }
+        }
+        // Clear the screen
+        SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
+        SDL_RenderClear(Game::renderer);
+
+        // Render other UI elements if needed
+
+        // Render the input box
+        SDL_Rect inputBoxRect = {screen_width / 2 - 150, screen_height / 2 - 50, 300, 100}; // Adjust size and position
+        SDL_SetRenderDrawColor(Game::renderer, 50, 50, 50, 255);
+        SDL_RenderFillRect(Game::renderer, &inputBoxRect);
+
+        // Render the "INPUT NAME"
+		TTF_Font *font = TTF_OpenFont("build/Pixel Sans Serif.ttf", 30);
+		if (font == nullptr)
+		{
+			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+			SDL_Delay(10000);
+		}
+		string INPUTNAME = "INPUT YOUR NAME";
+		SDL_Color color = {255, 255, 0};
+		SDL_Surface *surface = TTF_RenderText_Solid(font, INPUTNAME.c_str(), color);
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
+		SDL_Rect textRect = {screen_width / 2 - 208, screen_height / 2 - 112, surface->w, surface->h};
+		SDL_FreeSurface(surface);
+		SDL_RenderCopy(Game::renderer, texture, NULL, &textRect);
+        // Render the entered text or default text based on the flag
+		
+        SDL_Color White = {255, 255, 255};
+        if (showDefaultText)
+        {
+            textBox defaultText(screen_width / 2, screen_height / 2, "ANONYMOUS", White, 15);
+            defaultText.renderText(Game::renderer, "build/Pixel Sans Serif.ttf");
+        }
+        else
+        {
+            textBox inputText(screen_width / 2, screen_height / 2, playerName, White, 15);
+            inputText.renderText(Game::renderer, "build/Pixel Sans Serif.ttf");
+        }
+
+        SDL_RenderPresent(Game::renderer);
+    }
+    SDL_StopTextInput();
+    // Now playerName contains the inputted name or is empty if none was given
+	string finalName = (playerName.empty() ? "ANONYMOUS" : playerName);
+    cout << finalName << endl;
+    ofstream recordFile("Record.txt", ios::app);
+    if (recordFile.is_open())
+    {
+        recordFile << finalName;
+        recordFile.close();
+    }
+    else
+    {
+        cerr << "Unable to open Record.txt for writing." << endl;
+    }
+}
+

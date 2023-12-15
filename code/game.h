@@ -8,6 +8,10 @@
 #define blockWidth  32
 #define blockHeight 32
 #define key_delay_constant 5
+#define VOLBM 5 // volume button move
+#define VOLBP 15 // volume button pick
+#define VOLGT 25 // volume game theme
+#define VOLT 20 // volume theme
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,6 +26,7 @@
 #include "gameState.h"
 #include "menu/MainMenu.h"
 #include "menu/PauseMenu.h"
+#include "menu/GameoverMenu.h"
 #include "BackgroundManager.h"
 
 using namespace std;
@@ -36,6 +41,8 @@ private:
 
 public:
     Audio audioManager;
+    static Game* game;
+    static GameState* gameState;
     static bool isRunning;
     static bool on;  // menu
     static SDL_Renderer* renderer;
@@ -44,7 +51,6 @@ public:
     
     Game(const char* title = "", int xPos = 0, int yPos = 0, int width = 0, int height = 0, bool fullscreen = false);
     ~Game();
-    GameState* gameState;
     void HandleEvent();
     void Update();
     void Renderer();

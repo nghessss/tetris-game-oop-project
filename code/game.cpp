@@ -4,6 +4,8 @@ SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
 bool Game::isRunning = false;
 bool Game::on = false;
+Game *Game::game;
+GameState *Game::gameState;
 SDL_Texture *Game::backgroundTexture;
 
 Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullscreen)
@@ -60,7 +62,7 @@ void Game::HandleEvent()
             {
                 std::cout << "PAUSE MENU IS ON" << std::endl;
                 MainMenu::audioMainMenu.stopBackgroundMusic();
-                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 30);
+                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 10);
                 on = false;
                 PauseMenu::on = true;
             }
@@ -75,6 +77,7 @@ void Game::HandleEvent()
     static int rightKeyDelay = 0;
     static int downLeftKeyDelay = 0;
     static int downRightKeyDelay = 0;
+    static int controlKeyDelay = 0;
     static bool upKeyReleased = true;
     static bool isFallingFromSpace = false;
 
@@ -192,15 +195,30 @@ void Game::HandleEvent()
             shiftKeyDelay = 0;
         }
     }
+    if (key_states[SDL_SCANCODE_LCTRL] || key_states[SDL_SCANCODE_RCTRL])
+    {
+        controlKeyDelay++;
+        if (controlKeyDelay == key_delay_constant)
+        {
+            if(gameState->boomCount-- > 0)
+                gameState->setCurrentBlock(gameState->getBoomBlock());
+            controlKeyDelay = 0;
+        }
+    }
 }
 void updateTime()
 {
+    GameState::currentTime = SDL_GetTicks() - GameState::timeStart;
 }
 void Game::Update()
 {
-    updateTime();
-    gameState->updateBlock();
-    gameState->clearLines();
+    if (GameState::gameOver == false)
+    {
+        updateTime();
+        gameState->updateBlock();
+        gameState->clearLines();
+        gameState->checkGameOver();    
+    }
 }
 void Game::Renderer()
 {
@@ -208,20 +226,26 @@ void Game::Renderer()
     // Render Background
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
     // This is where we would add stuff to render
+    
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
-    gameState->drawShadowBlock();
     gameState->drawBlock();
-    gameState->drawNextBlocks();
     gameState->drawHold();
+    gameState->drawNext();
     gameState->drawTime();
     gameState->drawLines();
     gameState->drawScore();
-    if(gameState->getHoldBlock() != NULL)
-        gameState->drawHoldBlock();
+    gameState->drawBoomBlockLeft();
+    if (GameState::gameOver == false){
+        if(gameState->getHoldBlock() != NULL)
+            gameState->drawHoldBlock();
+        gameState->drawShadowBlock();
+        gameState->drawNextBlocks();
+    }
     SDL_RenderPresent(renderer);
 }
+
 void Game::Clean()
 {
     delete gameState;
