@@ -1,7 +1,7 @@
 #include "AboutMenu.h"
 
 bool AboutMenu::on = false;
-bool  AboutMenu::isMuted = false;
+bool AboutMenu::isMuted = false;
 Audio AboutMenu::audioAboutMenu;
 
 AboutMenu::AboutMenu()

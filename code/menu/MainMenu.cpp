@@ -172,7 +172,8 @@ void MainMenu::HandleEvent()
 	}
 }
 void MainMenu::Update()
-{ // animate the option selected (change the size)
+{ 
+	// animate the option selected (change the size)
 	for (int i = 0; i < n; i++)
 	{ 
 
@@ -227,8 +228,6 @@ void MainMenu::GetNameInput()
         // Clear the screen
         SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
         SDL_RenderClear(Game::renderer);
-
-        // Render other UI elements if needed
 
         // Render the input box
         SDL_Rect inputBoxRect = {screen_width / 2 - 150, screen_height / 2 - 50, 300, 100}; // Adjust size and position

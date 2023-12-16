@@ -120,7 +120,7 @@ void GameoverMenu::Update()
 };
 void GameoverMenu::Render()
 {
-	// // DISPLAY "GAMEOVER"
+	// DISPLAY "GAMEOVER"
 	TTF_Font *font = TTF_OpenFont("build/novem___.ttf", 100);
     if (font == nullptr)
     {
@@ -133,12 +133,12 @@ void GameoverMenu::Render()
     SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
     SDL_Rect textRect = {80, 180, surface->w, surface->h};
     SDL_FreeSurface(surface);
-	// // DISPLAY BACKGROUND
+	// DISPLAY BACKGROUND
     SDL_Rect rect = {0, 148, 600, 416};
-	// // RENDERCOPY
+	// RENDERCOPY
 	SDL_RenderCopy(Game::renderer, backgoundGameOver, NULL, &rect);
 	SDL_RenderCopy(Game::renderer, texture, NULL, &textRect);
-	// // RENDERPRESENT
+	// RENDERPRESENT
 	SDL_Color White{255, 255, 255};
 	for (int i = 0; i < n; i++)
 	{
