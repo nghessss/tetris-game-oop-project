@@ -592,7 +592,7 @@ void GameState::clearLines()
 
     // Tạo một vector để lưu trữ các chỉ số của các dòng cần xóa
     vector<int> linesToClear;
-    for (int i = rows; i >= 1;)
+    for (int i = 1; i <= rows; ++i)
     {
         bool isLineComplete = true;
         for (int j = 1; j <= cols; ++j)
@@ -608,7 +608,6 @@ void GameState::clearLines()
             linesToClear.push_back(i);
             ++linesCleared;
         }
-        --i;
     }
 
     // Hiệu ứng cho từng dòng được xóa
@@ -634,7 +633,7 @@ void GameState::clearLines()
         memset(currentGameState[1] + 1, 0, cols * sizeof(Block *));
 
         Audio clearLineAudio;
-        clearLineAudio.playBackgroundMusicEffect("audio/ClearLine.mp3", 100);
+        clearLineAudio.playBackgroundMusicEffect("audio/ClearLine.mp3", 128);
     }
 
     clearedLines += linesCleared;
