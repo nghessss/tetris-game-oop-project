@@ -340,7 +340,6 @@ void GameState::clearLines()
 {
     int linesCleared = 0;
 
-    // Tạo một vector để lưu trữ các chỉ số của các dòng cần xóa
     vector<int> linesToClear;
     for (int i = 1; i <= rows; ++i)
     {
@@ -360,7 +359,6 @@ void GameState::clearLines()
         }
     }
 
-    // Hiệu ứng cho từng dòng được xóa
     for (int i : linesToClear)
     {
         SDL_Texture *tempColor = loadImage("image/clear.png");
@@ -373,7 +371,6 @@ void GameState::clearLines()
         SDL_DestroyTexture(tempColor);
         SDL_Delay(50);
 
-        // Di chuyển các dòng phía trên xuống
         for (int k = i; k > 1; --k)
         {
             copy(currentGameState[k - 1] + 1, currentGameState[k - 1] + cols + 1, currentGameState[k] + 1);
@@ -517,7 +514,6 @@ void GameState::drawTime()
     seconds = seconds % 60;
     int milliseconds = currentTime % 100;
 
-    // string time = "TIME";
     stringstream ss;
     ss
         << setfill('0') << setw(2) << minutes << ":"
@@ -828,7 +824,6 @@ void GameState::drawBoomBlockLeft()
     SDL_FreeSurface(surface);
     // free font
     TTF_CloseFont(font);
-
 }
 
 
