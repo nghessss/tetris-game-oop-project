@@ -13,7 +13,6 @@ class Block;
 class Point;
 class GameState {
     SDL_Texture *currentGameState[rows+2][cols+2];
-    
     static int score;
     static int clearedLines;
     static bool checkHold;
@@ -30,13 +29,16 @@ public:
     static int timeStart;
     static int currentTime;
     static bool gameOver;
+
     GameState();
     ~GameState();
-    //update
+
+    //check
     void checkGameOver();
     bool checkCollapse(Block *block,Point point);
     bool checkCanChangeDirect(Block *block);
-    Point getCollapsablePoint();
+
+    //update
     void updateGameStateAfterBoom();
     void updateBlock();
     void clearLines();
@@ -46,8 +48,9 @@ public:
     void updateBestScore();
     void loadBestScore();
     static void saveBestScore();
+    void holdCurrentBlock();
+
     //draw
-    
     void drawGameState();
     void drawGameBorder();
     void drawTime();
@@ -61,16 +64,18 @@ public:
     void drawHoldBlock();
     void drawBlurBackground();
     void drawBoomBlockLeft();
+
     //get
     Block* getCurrentBlock();
     Block* getHoldBlock();
     Block* getBoomBlock();
-    void holdCurrentBlock();
+    Point getCollapsablePoint();
+
     //set
     void setCurrentBlock(Block* block);
+
+    //reset
     void Reset();
-    // 
-;
 };
 
 #endif
