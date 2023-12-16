@@ -102,7 +102,6 @@ void GameState::Reset() {
 
 }
 
-
 //check
 bool GameState::checkCollapse(Block *block, Point point)
 {
@@ -270,7 +269,7 @@ void GameState::updateScore(int linesCleared)
     {
         score += 50;
     }
-    else if (linesCleared > 0)
+    else if (linesCleared == 4)
     {
         score += 80;
     }
