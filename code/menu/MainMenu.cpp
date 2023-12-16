@@ -172,7 +172,8 @@ void MainMenu::HandleEvent()
 	}
 }
 void MainMenu::Update()
-{ // animate the option selected (change the size)
+{ 
+	// animate the option selected (change the size)
 	for (int i = 0; i < n; i++)
 	{ 
 
@@ -228,8 +229,6 @@ void MainMenu::GetNameInput()
         SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
         SDL_RenderClear(Game::renderer);
 
-        // Render other UI elements if needed
-
         // Render the input box
         SDL_Rect inputBoxRect = {screen_width / 2 - 150, screen_height / 2 - 50, 300, 100}; // Adjust size and position
         SDL_SetRenderDrawColor(Game::renderer, 50, 50, 50, 255);
@@ -266,7 +265,8 @@ void MainMenu::GetNameInput()
         SDL_RenderPresent(Game::renderer);
     }
     SDL_StopTextInput();
-    // Now playerName contains the inputted name or is empty if none was given
+
+    // playerName contains the inputted name or is empty if none was given
 	string finalName = (playerName.empty() ? "ANONYMOUS" : playerName);
     cout << finalName << endl;
     ofstream recordFile("Record.txt", ios::app);

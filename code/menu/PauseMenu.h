@@ -12,10 +12,9 @@ private:
 	int n = 3;
 	textBox textBoxes[3];
 	SDL_Texture* pauseMenuTexture;
-
 public:
-	static Audio audioPauseMenu;
 	static bool isMuted;
+	static Audio audioPauseMenu;
 	static bool on;
 	PauseMenu();
 	~PauseMenu();

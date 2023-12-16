@@ -15,6 +15,11 @@ Audio::~Audio() {
     Mix_CloseAudio();
 }
 
+int Audio::getVolume() 
+{ 
+    return volume; 
+}
+
 void Audio::playBackgroundMusic(const char *filePath, int volume) {
     stopBackgroundMusic(); // Stop previous music if playing
 

@@ -7,7 +7,44 @@ textBox::textBox() {
 	message = "INIT";
 	size = 200;
 };
+textBox::textBox(int x, int y, const std::string &text, const SDL_Color &color, int size)
+    : x(x), y(y), message(text.c_str()), c(color), size(size) {}
 textBox::~textBox() {};
+
+
+int textBox::getX() 
+{ 
+    return x; 
+}
+int textBox::getY() 
+{ 
+    return y; 
+}
+const char* textBox::getMessage() 
+{ 
+    return message; 
+}
+
+void textBox::setX(int x) 
+{ 
+    this->x = x; 
+}
+void textBox::setY(int y) 
+{ 
+    this->y = y; 
+}
+void textBox::setMessage(const char* message) 
+{ 
+    this->message = message; 
+}
+void textBox::setColor(unsigned char r, unsigned char g, unsigned char b) 
+{ 
+    this->c = {r, g, b}; 
+}
+void textBox::setSize(int size) 
+{ 
+    this->size = size; 
+}
 
 void textBox::renderText(SDL_Renderer* renderer, string path) {
 

@@ -13,12 +13,13 @@ private:
 	SDL_Texture* gameoverMenuTexture;
 	SDL_Texture* gameoverMenuTextureLayout;
 public:
-	static Audio audioRecordMenu;
-	static bool isMuted;
 	static textBox textBoxes[n];
+	static bool isMuted;
+	static Audio audioRecordMenu;
+	static bool on;
 	static vector<pair<string, int>> players;
 	static vector<string> messages;
-	static bool on;
+	
 	RecordMenu();
 	~RecordMenu();
 	void Update();

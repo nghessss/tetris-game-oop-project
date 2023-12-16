@@ -9,21 +9,25 @@
 #include <future>
 using namespace std;
 class Audio {
-public:
-    Audio();
-    ~Audio();
-
-    void playBackgroundMusicEffect(const char *filePath, int volume);
-    void playBackgroundMusic(const char *filePath, int volume);
-    void stopBackgroundMusic();
-    void setVolume(int volume);
-    int getVolume() { return volume; }
-
 private:
     int volume;
     Mix_Music *backgroundMusic;
     Mix_Chunk *effectMusic;
-    std::unique_ptr<std::thread> playbackThread;
+    unique_ptr<thread> playbackThread;
+public:
+    Audio();
+    ~Audio();
+
+    //get
+    int getVolume() { return volume; };
+
+    //set
+    void setVolume(int volume);
+
+    //music
+    void playBackgroundMusicEffect(const char *filePath, int volume);
+    void playBackgroundMusic(const char *filePath, int volume);
+    void stopBackgroundMusic();
 };
 
 #endif // AUDIO_H

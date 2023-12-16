@@ -112,7 +112,8 @@ void PauseMenu::HandleEvent()
 void PauseMenu::Update()
 {
 	for (int i = 0; i < n; i++)
-	{ // reset all to default
+	{ 
+		// reset all to default
 		textBoxes[i].setColor(255, 255, 255);
 		textBoxes[i].setSize(80);
 	}

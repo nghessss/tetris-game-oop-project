@@ -16,8 +16,8 @@ private:
 	textBox textBoxes[3];
 	SDL_Texture* backgoundGameOver;
 public:
-	static Audio audioGameoverMenu;
 	static bool isMuted;
+	static Audio audioGameoverMenu;
 	static bool on;
 	GameoverMenu();
 	~GameoverMenu();
