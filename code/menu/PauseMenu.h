@@ -15,6 +15,7 @@ private:
 
 public:
 	static Audio audioPauseMenu;
+	static bool isMuted;
 	static bool on;
 	PauseMenu();
 	~PauseMenu();

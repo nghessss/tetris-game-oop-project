@@ -12,6 +12,7 @@
 #define VOLBP 15 // volume button pick
 #define VOLGT 25 // volume game theme
 #define VOLT 20 // volume theme
+#define VOLPT 10 // volume pause theme
 #include <iostream>
 #include <string>
 #include <vector>
@@ -40,7 +41,8 @@ private:
     SDL_Window* window;
 
 public:
-    Audio audioManager;
+    static Audio audioManager;
+    static bool isMuted;
     static Game* game;
     static GameState* gameState;
     static bool isRunning;

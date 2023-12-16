@@ -1,6 +1,7 @@
 #include "GameoverMenu.h"
 
 bool GameoverMenu::on = false;
+bool GameoverMenu::isMuted = false;
 Audio GameoverMenu::audioGameoverMenu;
 
 GameoverMenu::GameoverMenu()
@@ -24,7 +25,6 @@ GameoverMenu::~GameoverMenu(){
 	SDL_DestroyTexture(backgoundGameOver);
 	// SDL_RenderClear(Game::renderer);
 };
-
 void GameoverMenu::HandleEvent()
 {
 	SDL_Event event;
@@ -52,7 +52,7 @@ void GameoverMenu::HandleEvent()
 			{ 
 				Game::gameState->Reset();
 				audioGameoverMenu.stopBackgroundMusic();
-				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", VOLGT);
+				Game::audioManager.playBackgroundMusic("audio/gameTheme.mp3", VOLGT);
 				on = false;
 				Game::on = true;
 				GameState::gameOver = false;
@@ -71,6 +71,28 @@ void GameoverMenu::HandleEvent()
 				Game::isRunning = false;
 			}
 			break;
+		case SDLK_q:
+            // Toggle mute
+            isMuted = !isMuted;
+            if (isMuted)
+            {
+                audioGameoverMenu.setVolume(0);
+            }
+            else
+            {
+                audioGameoverMenu.setVolume(VOLT); // Set your desired volume level
+            }
+            break;
+
+        case SDLK_w:
+            // Increase volume
+            audioGameoverMenu.setVolume(audioGameoverMenu.getVolume() + 5); // Increase by 5
+            break;
+
+        case SDLK_e:
+            // Decrease volume
+            audioGameoverMenu.setVolume(audioGameoverMenu.getVolume() - 5); // Decrease by 5
+            break;
 
 		default:
 			break;
@@ -86,7 +108,6 @@ void GameoverMenu::HandleEvent()
 		break;
 	}
 };
-
 void GameoverMenu::Update()
 {
 	for (int i = 0; i < n; i++)

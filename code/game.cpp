@@ -7,6 +7,9 @@ bool Game::on = false;
 Game *Game::game;
 GameState *Game::gameState;
 SDL_Texture *Game::backgroundTexture;
+bool Game::isMuted = false;
+
+Audio Game::audioManager;
 
 Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullscreen)
 {
@@ -34,8 +37,8 @@ Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fu
         gameState = new GameState();
         // Init and Create Background Texture
         BackgroundManager::InitBackground();
-        const char* currentBackground = BackgroundManager::GetCurrentBackground();
-        SDL_Surface* backgroundSurface = IMG_Load(currentBackground);
+        const char *currentBackground = BackgroundManager::GetCurrentBackground();
+        SDL_Surface *backgroundSurface = IMG_Load(currentBackground);
         backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
         SDL_FreeSurface(backgroundSurface);
     }
@@ -54,21 +57,48 @@ void Game::HandleEvent()
     SDL_PollEvent(&event);
     switch (event.type)
     {
-        case SDL_QUIT:
-            isRunning = false;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE)
+    case SDL_QUIT:
+        isRunning = false;
+        break;
+    case SDL_KEYDOWN:
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_ESCAPE:
+        {
+            std::cout << "PAUSE MENU IS ON" << std::endl;
+            audioManager.stopBackgroundMusic();
+            PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", VOLPT);
+            on = false;
+            PauseMenu::on = true;
+        }
+        break;
+        case SDLK_q:
+            // Toggle mute
+            isMuted = !isMuted;
+            if (isMuted)
             {
-                std::cout << "PAUSE MENU IS ON" << std::endl;
-                MainMenu::audioMainMenu.stopBackgroundMusic();
-                PauseMenu::audioPauseMenu.playBackgroundMusic("audio/pauseTheme.mp3", 10);
-                on = false;
-                PauseMenu::on = true;
+                audioManager.setVolume(0);
             }
+            else
+            {
+                audioManager.setVolume(VOLT); // Set your desired volume level
+            }
+            break;
+
+        case SDLK_w:
+            // Increase volume
+            audioManager.setVolume(audioManager.getVolume() + 5); // Increase by 5
+            break;
+
+        case SDLK_e:
+            // Decrease volume
+            audioManager.setVolume(audioManager.getVolume() - 5); // Decrease by 5
             break;
         default:
             break;
+        }
+    default:
+        break;
     }
 
     static int shiftKeyDelay = 0;
@@ -89,7 +119,8 @@ void Game::HandleEvent()
         if (upKeyReleased)
         {
             Block *block = new Block(*gameState->getCurrentBlock());
-            if (gameState->checkCanChangeDirect(block)){
+            if (gameState->checkCanChangeDirect(block))
+            {
                 gameState->checkCanChangeDirect(gameState->getCurrentBlock());
             }
             delete block;
@@ -101,18 +132,21 @@ void Game::HandleEvent()
         upKeyReleased = true;
     }
 
-    if (key_states[SDL_SCANCODE_SPACE]) {
-        if (!isFallingFromSpace) {
+    if (key_states[SDL_SCANCODE_SPACE])
+    {
+        if (!isFallingFromSpace)
+        {
             Point targetPoint = gameState->getCollapsablePoint();
 
             gameState->getCurrentBlock()->space(targetPoint);
             isFallingFromSpace = true;
         }
     }
-    else {
+    else
+    {
         isFallingFromSpace = false;
     }
-    
+
     if (key_states[SDL_SCANCODE_DOWN] && key_states[SDL_SCANCODE_LEFT])
     {
         downLeftKeyDelay++;
@@ -164,7 +198,7 @@ void Game::HandleEvent()
                 leftKeyDelay++;
                 if (leftKeyDelay == key_delay_constant)
                 {
-                    
+
                     point.setX(point.getX() - 1);
                     if (gameState->checkCollapse(gameState->getCurrentBlock(), point) == 0)
                         gameState->getCurrentBlock()->moveLeft();
@@ -185,7 +219,7 @@ void Game::HandleEvent()
             }
         }
     }
-    if(key_states[SDL_SCANCODE_LSHIFT] || key_states[SDL_SCANCODE_RSHIFT])
+    if (key_states[SDL_SCANCODE_LSHIFT] || key_states[SDL_SCANCODE_RSHIFT])
     {
         shiftKeyDelay++;
         cout << "Shift ";
@@ -200,7 +234,7 @@ void Game::HandleEvent()
         controlKeyDelay++;
         if (controlKeyDelay == key_delay_constant)
         {
-            if(gameState->boomCount-- > 0)
+            if (gameState->boomCount-- > 0)
                 gameState->setCurrentBlock(gameState->getBoomBlock());
             controlKeyDelay = 0;
         }
@@ -217,7 +251,7 @@ void Game::Update()
         updateTime();
         gameState->updateBlock();
         gameState->clearLines();
-        gameState->checkGameOver();    
+        gameState->checkGameOver();
     }
 }
 void Game::Renderer()
@@ -226,7 +260,7 @@ void Game::Renderer()
     // Render Background
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
     // This is where we would add stuff to render
-    
+
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
@@ -237,8 +271,9 @@ void Game::Renderer()
     gameState->drawLines();
     gameState->drawScore();
     gameState->drawBoomBlockLeft();
-    if (GameState::gameOver == false){
-        if(gameState->getHoldBlock() != NULL)
+    if (GameState::gameOver == false)
+    {
+        if (gameState->getHoldBlock() != NULL)
             gameState->drawHoldBlock();
         gameState->drawShadowBlock();
         gameState->drawNextBlocks();

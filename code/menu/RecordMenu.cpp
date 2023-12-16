@@ -9,6 +9,8 @@ vector<pair<string, int>> RecordMenu::players;
 vector<string> RecordMenu::messages(5);
 textBox RecordMenu::textBoxes[];
 
+Audio RecordMenu::audioRecordMenu;
+bool RecordMenu::isMuted = false;
 RecordMenu::RecordMenu()
 {
     const char *imagePath = BackgroundManager::GetCurrentBackground();
@@ -29,11 +31,9 @@ RecordMenu::RecordMenu()
     {
         textBoxes[i].setMessage("--");
     }
-    textBoxes[n - 1].setMessage("PRESS ENTER");
+    textBoxes[n - 1].setMessage("BACK TO MENU");
 }
-
 RecordMenu::~RecordMenu() {}
-
 void RecordMenu::HandleEvent()
 {
     SDL_Event event;
@@ -63,6 +63,27 @@ void RecordMenu::HandleEvent()
                 MainMenu::on = true;
             }
             break;
+        case SDLK_q:
+            // Toggle mute
+            isMuted = !isMuted;
+            if (RecordMenu::isMuted)
+            {
+                RecordMenu::audioRecordMenu.setVolume(0);
+            }
+            else
+            {
+                RecordMenu::audioRecordMenu.setVolume(VOLT); // Set your desired volume level
+            }
+            break;
+        case SDLK_w:
+            // Increase volume
+            RecordMenu::audioRecordMenu.setVolume(RecordMenu::audioRecordMenu.getVolume() + 5); // Increase by 5
+            break;
+
+        case SDLK_e:
+            // Decrease volume
+            RecordMenu::audioRecordMenu.setVolume(RecordMenu::audioRecordMenu.getVolume() - 5); // Decrease by 5
+            break;
         default:
             break;
         }
@@ -75,7 +96,6 @@ void RecordMenu::HandleEvent()
         break;
     }
 }
-
 void RecordMenu::Update()
 {
     textBoxes[0].setColor(255, 153, 0);
@@ -100,7 +120,6 @@ void RecordMenu::Update()
     }
 
 }
-
 void RecordMenu::Render()
 {
     SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);

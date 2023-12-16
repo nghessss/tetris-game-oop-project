@@ -8,6 +8,7 @@
 #include "TextBox.h"
 #include "AboutMenu.h"
 #include "RecordMenu.h"
+#include "TutorialMenu.h"
 #include <string>
 
 using namespace std;

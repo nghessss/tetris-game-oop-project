@@ -2,6 +2,7 @@
 
 bool PauseMenu::on = false;
 Audio PauseMenu::audioPauseMenu;
+bool PauseMenu::isMuted = false;
 
 PauseMenu::PauseMenu()
 {
@@ -23,7 +24,6 @@ PauseMenu::~PauseMenu()
 	audioPauseMenu.stopBackgroundMusic();
 	SDL_DestroyTexture(pauseMenuTexture);
 };
-
 void PauseMenu::HandleEvent()
 {
 	SDL_Event event;
@@ -54,7 +54,7 @@ void PauseMenu::HandleEvent()
 			{
 				on = false;
 				audioPauseMenu.stopBackgroundMusic();
-				MainMenu::audioMainMenu.playBackgroundMusic("audio/gameTheme.mp3", VOLGT);
+				Game::audioManager.playBackgroundMusic("audio/gameTheme.mp3", VOLGT);
 				Game::on = true;
 			}
 			if (pos == 1)
@@ -73,6 +73,27 @@ void PauseMenu::HandleEvent()
 				Game::isRunning = false;
 			}
 			break;
+		case SDLK_q:
+            // Toggle mute
+            isMuted = !isMuted;
+            if (isMuted)
+            {
+                audioPauseMenu.setVolume(0);
+            }
+            else
+            {
+                audioPauseMenu.setVolume(VOLT); // Set your desired volume level
+            }
+            break;
+        case SDLK_w:
+            // Increase volume
+            audioPauseMenu.setVolume(audioPauseMenu.getVolume() + 5); // Increase by 5
+            break;
+
+        case SDLK_e:
+            // Decrease volume
+            audioPauseMenu.setVolume(audioPauseMenu.getVolume() - 5); // Decrease by 5
+            break;
 
 		default:
 			break;
@@ -88,7 +109,6 @@ void PauseMenu::HandleEvent()
 		break;
 	}
 };
-
 void PauseMenu::Update()
 {
 	for (int i = 0; i < n; i++)

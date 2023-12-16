@@ -4,6 +4,7 @@
 #include "menu/AboutMenu.h"
 #include "menu/GameoverMenu.h"
 #include "menu/RecordMenu.h"
+#include "menu/TutorialMenu.h"
 
 #include <chrono>
 #include <thread>
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
     AboutMenu *aboutM = new AboutMenu;
     GameoverMenu *gameoverM = new GameoverMenu;
     RecordMenu *recordM = new RecordMenu;
+    TutorialMenu *tutorialM = new TutorialMenu;
     const int targetFPS = 60;
     const chrono::duration<double, milli> frameDuration(1000.0 / targetFPS);
 
@@ -75,6 +77,15 @@ int main(int argc, char *argv[])
                 recordM->Render();
             }
         }
+        if (tutorialM->on)
+        {
+            tutorialM->HandleEvent();
+            if (tutorialM->on)
+            {
+                tutorialM->Update();
+                tutorialM->Render();
+            }
+        }
         if (pauseM->on)
         {
             pauseM->HandleEvent();
@@ -92,5 +103,6 @@ int main(int argc, char *argv[])
     delete aboutM;
     delete gameoverM;
     delete recordM;
+    delete tutorialM;
     return 0;
 }

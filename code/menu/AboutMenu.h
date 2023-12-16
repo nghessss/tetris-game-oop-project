@@ -14,6 +14,8 @@ private:
 	SDL_Texture* aboutMenuTexture;
 	SDL_Texture* aboutMenuTextureLayout;
 public:
+	static bool isMuted;
+	static Audio audioAboutMenu;
 	static bool on;
 	AboutMenu();
 	~AboutMenu();

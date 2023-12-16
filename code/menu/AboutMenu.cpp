@@ -1,7 +1,8 @@
 #include "AboutMenu.h"
-#include "../game.h"
 
 bool AboutMenu::on = false;
+bool  AboutMenu::isMuted = false;
+Audio AboutMenu::audioAboutMenu;
 
 AboutMenu::AboutMenu()
 {
@@ -26,9 +27,7 @@ AboutMenu::AboutMenu()
     textBoxes[3].setMessage("22127295: VO THANH NGHIA");
     textBoxes[4].setMessage("BACK TO MENU");
 };
-
 AboutMenu::~AboutMenu() {}
-
 void AboutMenu::HandleEvent()
 {
     SDL_Event event;
@@ -44,23 +43,45 @@ void AboutMenu::HandleEvent()
         switch (event.key.keysym.sym)
         {
         case SDLK_UP:
-            MainMenu::audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
+            audioAboutMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
             pos -= 1;
             break;
         case SDLK_DOWN:
-            MainMenu::audioMainMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
+            audioAboutMenu.playBackgroundMusicEffect("audio/ButtonMove.mp3", VOLBM);
             pos += 1;
             break;
 
         case SDLK_RETURN:
-            MainMenu::audioMainMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLBP);
+            audioAboutMenu.playBackgroundMusicEffect("audio/ButtonPick.mp3", VOLBP);
             if (pos == 4) {
-				MainMenu::audioMainMenu.stopBackgroundMusic();
+				audioAboutMenu.stopBackgroundMusic();
 				if (!MainMenu::isMuted)
 					MainMenu::audioMainMenu.playBackgroundMusic("Audio/theme.mp3", VOLT);
 				on = false;
 				MainMenu::on = true;
 			}
+            break;
+        case SDLK_q:
+            // Toggle mute
+            isMuted = !isMuted;
+            if (isMuted)
+            {
+                audioAboutMenu.setVolume(0);
+            }
+            else
+            {
+                audioAboutMenu.setVolume(VOLT); // Set your desired volume level
+            }
+            break;
+
+        case SDLK_w:
+            // Increase volume
+            audioAboutMenu.setVolume(audioAboutMenu.getVolume() + 5); // Increase by 5
+            break;
+
+        case SDLK_e:
+            // Decrease volume
+            audioAboutMenu.setVolume(audioAboutMenu.getVolume() - 5); // Decrease by 5
             break;
 
         default:
@@ -77,7 +98,6 @@ void AboutMenu::HandleEvent()
         break;
     }
 }
-
 void AboutMenu::Update()
 {
     for (int i = 0; i < n; i++)
@@ -93,11 +113,8 @@ void AboutMenu::Update()
         textBoxes[pos].setSize(35);
     }
 }
-
 void AboutMenu::Render()
 {
-    SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
-    SDL_RenderClear(Game::renderer);
     SDL_SetRenderDrawColor(Game::renderer, 20, 20, 20, 255);
     SDL_RenderClear(Game::renderer);
     SDL_RenderCopy(Game::renderer, aboutMenuTexture, NULL, NULL);
