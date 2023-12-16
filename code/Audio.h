@@ -19,7 +19,7 @@ public:
     ~Audio();
 
     //get
-    int getVolume() { return volume; };
+    int getVolume();
 
     //set
     void setVolume(int volume);
