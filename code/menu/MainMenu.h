@@ -7,7 +7,10 @@
 #include "../BackgroundManager.h"
 #include "TextBox.h"
 #include "AboutMenu.h"
+#include "RecordMenu.h"
+#include "TutorialMenu.h"
 #include <string>
+
 using namespace std;
 
 class MainMenu
@@ -19,11 +22,13 @@ private:
     string musicPaths[n];
 	SDL_Texture* mainMenuTexture;
 public:
+	static string playerName;
 	static bool isMuted;
 	static Audio audioMainMenu;
 	static bool on;
 	MainMenu();
 	~MainMenu();
+	void GetNameInput();
 	void RenderTeamDetails();
 	void Update();
 	void Render();

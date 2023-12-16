@@ -45,7 +45,7 @@ public:
     void freeTheBoard();
     void updateBestScore();
     void loadBestScore();
-    void saveBestScore();
+    static void saveBestScore();
     //draw
     
     void drawGameState();
@@ -68,6 +68,7 @@ public:
     void holdCurrentBlock();
     //set
     void setCurrentBlock(Block* block);
+    void Reset();
     // 
 ;
 };

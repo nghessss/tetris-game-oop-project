@@ -5,20 +5,20 @@
 #include "../Audio.h"
 #include "TextBox.h"
 
-class PauseMenu
+class TutorialMenu
 {
 private:
 	int pos = 0;
-	int n = 3;
-	textBox textBoxes[3];
-	SDL_Texture* pauseMenuTexture;
-
+	static const int n = 1;
+	textBox textBoxes[n];
+	SDL_Texture* tutorialMenuTexture;
+	SDL_Texture* tutorialMenuTextureLayout;
 public:
-	static Audio audioPauseMenu;
 	static bool isMuted;
+	static Audio audioTutorialMenu;
 	static bool on;
-	PauseMenu();
-	~PauseMenu();
+	TutorialMenu();
+	~TutorialMenu();
 	void Update();
 	void Render();
 	void HandleEvent();

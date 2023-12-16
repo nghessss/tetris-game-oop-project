@@ -1,0 +1,6 @@
+aloha: 0
+ManhCuong: 100
+GHuy: 1000
+Nghia: 200
+Minh: 200
+Cuong07Cuong07: 50

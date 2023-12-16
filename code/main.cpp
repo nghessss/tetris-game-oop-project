@@ -2,55 +2,107 @@
 #include "menu/MainMenu.h"
 #include "menu/PauseMenu.h"
 #include "menu/AboutMenu.h"
+#include "menu/GameoverMenu.h"
+#include "menu/RecordMenu.h"
+#include "menu/TutorialMenu.h"
 
 #include <chrono>
 #include <thread>
 
-int main(int argc, char* argv[]) {
-    Game* game = new Game("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, false);
+int main(int argc, char *argv[])
+{
+    Game::game = new Game("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, false);
     MainMenu *mainM = new MainMenu;
     PauseMenu *pauseM = new PauseMenu;
     AboutMenu *aboutM = new AboutMenu;
-    Game::isRunning = true;
+    GameoverMenu *gameoverM = new GameoverMenu;
+    RecordMenu *recordM = new RecordMenu;
+    TutorialMenu *tutorialM = new TutorialMenu;
     const int targetFPS = 60;
     const chrono::duration<double, milli> frameDuration(1000.0 / targetFPS);
 
-
-    while (game->Running()) {
-        if (game->on) {
+    while (Game::game->Running())
+    {
+        if (Game::game->on)
+        {
             auto frameStart = chrono::high_resolution_clock::now();
 
-            game->HandleEvent();
-            game->Update();
-            game->Renderer();
+            Game::game->HandleEvent();
+            Game::game->Update();
+            Game::game->Renderer();
 
             auto frameEnd = chrono::high_resolution_clock::now();
             auto elapsed = chrono::duration_cast<chrono::milliseconds>(frameEnd - frameStart);
-
-            if (elapsed < frameDuration) {
+            if (GameState::gameOver)
+            {
+                GameoverMenu::audioGameoverMenu.playBackgroundMusic("audio/gameOver.mp3", 40);
+                while (GameState::gameOver)
+                {
+                    gameoverM->HandleEvent();
+                    gameoverM->Update();
+                    gameoverM->Render();
+                }
+                GameoverMenu::audioGameoverMenu.stopBackgroundMusic();
+            }
+            if (elapsed < frameDuration)
+            {
                 this_thread::sleep_for(frameDuration - elapsed);
             }
-        } 
-        if (mainM->on) {
+        }
+        if (mainM->on)
+        {
+            Game::game->on = false;
             mainM->HandleEvent();
-            mainM->Update();
-            mainM->Render();
+            if (mainM->on)
+            {
+                mainM->Update();
+                mainM->Render();
+            }
         }
-        if (aboutM->on) {
+        if (aboutM->on)
+        {
             aboutM->HandleEvent();
-            aboutM->Update();
-            aboutM->Render();            
+            if (aboutM->on)
+            {
+                aboutM->Update();
+                aboutM->Render();
+            }
         }
-        if (pauseM->on) {
+        if (recordM->on)
+        {
+            recordM->HandleEvent();
+            if (recordM->on)
+            {
+                recordM->Update();
+                recordM->Render();
+            }
+        }
+        if (tutorialM->on)
+        {
+            tutorialM->HandleEvent();
+            if (tutorialM->on)
+            {
+                tutorialM->Update();
+                tutorialM->Render();
+            }
+        }
+        if (pauseM->on)
+        {
             pauseM->HandleEvent();
-            pauseM->Update();
-            pauseM->Render();
+            if (pauseM->on)
+            {
+                pauseM->Update();
+                pauseM->Render();
+            }
         }
     }
 
-    delete game;
+    delete Game::game;
     delete mainM;
     delete pauseM;
     delete aboutM;
+    delete gameoverM;
+    delete recordM;
+    delete tutorialM;
     return 0;
 }

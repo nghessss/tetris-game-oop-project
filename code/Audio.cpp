@@ -4,6 +4,7 @@
 #include <chrono>
 
 Audio::Audio() : backgroundMusic(nullptr), playbackThread(nullptr) {
+    volume = 0;
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         throw runtime_error("SDL_mixer initialization failed: " + string(Mix_GetError()));
     }
@@ -32,6 +33,7 @@ void Audio::playBackgroundMusic(const char *filePath, int volume) {
 }
 
 void Audio::playBackgroundMusicEffect(const char *filePath, int volume) {
+    this->volume = volume;
     effectMusic = Mix_LoadWAV(filePath);
     if (!effectMusic) {
         std::cerr << "Failed to load hit sound: " << Mix_GetError() << std::endl;
@@ -57,3 +59,8 @@ void Audio::stopBackgroundMusic() {
     }
 }
 
+void Audio::setVolume(int volume) {
+    int currentVolume = max(0, min(volume, 128)); 
+    this->volume = currentVolume;
+    Mix_VolumeMusic(currentVolume);
+}

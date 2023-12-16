@@ -11,7 +11,11 @@ private:
 	int pos = 0;
 	static const int n = 5;
 	textBox textBoxes[n];
+	SDL_Texture* aboutMenuTexture;
+	SDL_Texture* aboutMenuTextureLayout;
 public:
+	static bool isMuted;
+	static Audio audioAboutMenu;
 	static bool on;
 	AboutMenu();
 	~AboutMenu();

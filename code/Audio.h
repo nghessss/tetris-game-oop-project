@@ -16,8 +16,11 @@ public:
     void playBackgroundMusicEffect(const char *filePath, int volume);
     void playBackgroundMusic(const char *filePath, int volume);
     void stopBackgroundMusic();
+    void setVolume(int volume);
+    int getVolume() { return volume; }
 
 private:
+    int volume;
     Mix_Music *backgroundMusic;
     Mix_Chunk *effectMusic;
     std::unique_ptr<std::thread> playbackThread;
