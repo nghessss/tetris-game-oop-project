@@ -233,7 +233,7 @@ void Game::HandleEvent()
         controlKeyDelay++;
         if (controlKeyDelay == key_delay_constant)
         {
-            if (gameState->boomCount > 0)
+            if (gameState->boomCount > 0 && typeid(*gameState->getCurrentBlock()) != typeid(*gameState->getBoomBlock()))
             {
                 gameState->setCurrentBlock(gameState->getBoomBlock());
                 gameState->boomCount--;

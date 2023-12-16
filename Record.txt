@@ -4,3 +4,5 @@ GHuy: 1000
 Nghia: 200
 Minh: 200
 Cuong07Cuong07: 50
+Cuong: 0
+a
