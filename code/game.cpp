@@ -264,13 +264,6 @@ void Game::Renderer()
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
-    gameState->drawBlock();
-    gameState->drawHold();
-    gameState->drawNext();
-    gameState->drawTime();
-    gameState->drawLines();
-    gameState->drawScore();
-    gameState->drawBoomBlockLeft();
     if (GameState::gameOver == false)
     {
         if (gameState->getHoldBlock() != NULL)
@@ -278,6 +271,13 @@ void Game::Renderer()
         gameState->drawShadowBlock();
         gameState->drawNextBlocks();
     }
+    gameState->drawBlock();
+    gameState->drawHold();
+    gameState->drawNext();
+    gameState->drawTime();
+    gameState->drawLines();
+    gameState->drawScore();
+    gameState->drawBoomBlockLeft();
     SDL_RenderPresent(renderer);
 }
 
