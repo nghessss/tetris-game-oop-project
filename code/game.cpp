@@ -263,8 +263,8 @@ void Game::Renderer()
     SDL_RenderClear(renderer);
     // Render Background
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-    // This is where we would add stuff to render
-
+    
+    // Add stuff to render
     gameState->drawBlurBackground();
     gameState->drawGameBorder();
     gameState->drawGameState();
