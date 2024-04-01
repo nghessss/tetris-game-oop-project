@@ -30,4 +30,4 @@ g++ -Isrc/include -Lsrc/lib -o main code/*.cpp code/menu/*.cpp -lmingw32 -lSDL2_
 - **Nguyen Ngoc Manh Cuong** - [ManhCuong110907](https://github.com/ManhCuong110907)
 - **Trieu Gia Huy** - [huyg](https://github.com/huyg1108)
 - **Nguyen Quang Minh** - [mJota666](https://github.com/mJota666)
-- **Vo Thanh Nghia** - [voasd00](https://github.com/voasd00)
+- **Vo Thanh Nghia** - [nghessss](https://github.com/nghessss)
